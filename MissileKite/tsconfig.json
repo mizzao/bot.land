@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "outFile": "MissileKite.js"
+  },
+  "include": [
+    "../lib/**/*"
+  ]
+}
