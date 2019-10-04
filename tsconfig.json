@@ -1,15 +1,8 @@
 {
-  "compilerOptions": {
-    "target": "es3",
-    "module": "none",
-    "sourceMap": false
-  },
-  "include": [
-    "lib/**/*"
-  ],
-  "references": [
-    {
-      "path": "MissileKite"
-    }
-  ]
+    "compilerOptions": {
+        "target": "es3",
+        "module": "none",
+        "sourceMap": false
+    },
+    "include": ["lib/**/*"]
 }

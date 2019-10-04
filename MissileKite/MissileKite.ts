@@ -1,6 +1,3 @@
-/// <reference path="../lib/bot.land.d.ts" />
-/// <reference path="../lib/utils.ts" />
-
 // Missile micro.
 // Good for dealing with those pesky melee/teleporting/zapper units.
 // TODO: allow running right on the map as well as left.

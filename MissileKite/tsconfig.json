@@ -1,8 +1,13 @@
 {
   "compilerOptions": {
-    "composite": true,
-    "outFile": "MissileKite.js"
+    "target": "es3",
+    "module": "none",
+    "sourceMap": false,
+    "outFile": "bot.js"
   },
+  "files": [
+    "MissileKite.ts"
+  ],
   "include": [
     "../lib/**/*"
   ]
