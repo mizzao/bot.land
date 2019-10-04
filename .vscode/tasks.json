@@ -4,15 +4,30 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "MissileKite compile",
             "type": "typescript",
             "tsconfig": "MissileKite/tsconfig.json",
             "problemMatcher": [
                 "$tsc"
             ],
+            "group": "build"
+        },
+        {
+            "label": "MissileKite output",
+            "type": "shell",
+            "command": "sed",
+            "args": [
+                "-i",
+                "s/var //g",
+                "MissileKite/bot.js"
+            ],
             "group": {
                 "kind": "build",
                 "isDefault": true
-            }
+            },
+            "dependsOn": [
+                "MissileKite compile"
+            ]
         }
     ]
 }
