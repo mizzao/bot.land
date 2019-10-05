@@ -61,23 +61,20 @@ const update = function() {
     const allFriendlyBots = findEntities(IS_OWNED_BY_ME, BOT, true);
     const numFriendlyBots = size(allFriendlyBots);
 
-    // If we're outnumbering them, just shoot instead of running and taking damage
-    // TODO: could at least keep a distance of 1
-    if (numFriendlyBots >= 3 && numEnemyBots <= 1) tryFireMissiles();
-
     // Protect against missiles/lasers if we have reflection
     if (enemyBotDistance < 5.1) {
         tryReflect();
         tryShieldSelf();
     }
 
-    // Prefer to be farther but occasionally shoot from closer
+    // Prefer to be farther but shoot from closer when we have advantage
     // Farther is better to avoid zappers / inferno zappers, but does less damage
     // > 3 also avoids Level 2 and lower missiles, so we can kite those.
     // At least on bigger maps.
 
     let evadeThreshold = 3.1;
-    if (percentChance(40)) evadeThreshold = 2.9;
+    // If we're outnumbering them, willing to shoot from closer
+    if (numFriendlyBots >= 3 && numEnemyBots <= 1) evadeThreshold = 2.9;
 
     if (enemyBotDistance < evadeThreshold) {
         // Cloak earlier if they are super close
