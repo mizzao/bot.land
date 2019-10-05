@@ -41,7 +41,7 @@ declare type Direction =
 
 // Functions
 declare function debugLog(msg: string): void;
-declare function exists(entity: Entity): boolean;
+declare function exists(entity?: Entity): boolean;
 
 declare function findEntities(
     friendlyOrEnemy: EntityMatchFlags,
@@ -54,8 +54,11 @@ declare function findEntity(
     sortBy: EntitySortType,
     sortOrder: EntitySortOrder
 ): Entity;
-
+declare function getEntityAt(x: number, y: number): Entity;
 declare function figureItOut(): void;
+
+// Functions - Math
+declare function abs(n: number): number;
 declare function floor(n: number): number;
 declare function percentChance(chance: number): boolean;
 declare function size(arr: any[]): number;

@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es3",
+    "module": "none",
+    "sourceMap": false,
+    "outFile": "bot.js"
+  },
+  "files": [
+    "ZapKite.ts"
+  ],
+  "include": [
+    "../lib/**/*"
+  ]
+}

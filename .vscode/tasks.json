@@ -1,6 +1,5 @@
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558
-    // for the documentation about the tasks.json format
+    // TODO: convert these to grunt tasks or something
     "version": "2.0.0",
     "tasks": [
         {
@@ -21,12 +20,35 @@
                 "s/var //g",
                 "MissileKite/bot.js"
             ],
+            "group": "build",
+            "dependsOn": [
+                "MissileKite compile"
+            ]
+        },
+        {
+            "label": "ZapKite compile",
+            "type": "typescript",
+            "tsconfig": "ZapKite/tsconfig.json",
+            "problemMatcher": [
+                "$tsc"
+            ],
+            "group": "build"
+        },
+        {
+            "label": "ZapKite output",
+            "type": "shell",
+            "command": "sed",
+            "args": [
+                "-i",
+                "s/var //g",
+                "ZapKite/bot.js"
+            ],
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
             "dependsOn": [
-                "MissileKite compile"
+                "ZapKite compile"
             ]
         }
     ]
