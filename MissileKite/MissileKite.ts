@@ -58,6 +58,13 @@ const update = function() {
 
     tryEvadeLasers(closestEnemyBot, numEnemyBots);
 
+    const allFriendlyBots = findEntities(IS_OWNED_BY_ME, BOT, true);
+    const numFriendlyBots = size(allFriendlyBots);
+
+    // If we're outnumbering them, just shoot instead of running and taking damage
+    // TODO: could at least keep a distance of 1
+    if (numFriendlyBots >= 3 && numEnemyBots <= 1) tryFireMissiles();
+
     // Protect against missiles/lasers if we have reflection
     if (enemyBotDistance < 5.1) {
         tryReflect();
