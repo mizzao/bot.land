@@ -1,60 +1,18 @@
-// Missile micro.
-// Good for dealing with those pesky melee/teleporting/zapper units.
-// TODO: allow running right on the map as well as left.
-
-// Default moving function.
-// We use this in place of figureItOut() to avoid unwanted cloaks.
-const defaultMove = function() {
-    // React to enemy structures
-    const closestEnemyChip = findEntity(
-        ENEMY,
-        CHIP,
-        SORT_BY_DISTANCE,
-        SORT_ASCENDING
-    );
-    if (exists(closestEnemyChip)) {
-        if (
-            canMoveTo(closestEnemyChip) &&
-            getDistanceTo(closestEnemyChip) > 1
-        ) {
-            pursue(closestEnemyChip);
-        }
-    }
-    const enemyCpu = findEntity(ENEMY, CPU, SORT_BY_DISTANCE, SORT_ASCENDING);
-    if (exists(enemyCpu)) {
-        if (canMoveTo(enemyCpu) && getDistanceTo(enemyCpu) > 1) {
-            pursue(enemyCpu);
-        }
-    }
-
-    // Take a look around
-    if (canActivateSensors()) activateSensors();
-    // TODO: do not pursue enemy bots > 5 away
-    // Need to modify figureItOut for this
-
-    // Movement code
-    const destinationY = floor(arenaHeight / 2);
-    if (isAttacker) {
-        const destinationX = arenaWidth - 1;
-        moveTo(destinationX, destinationY);
-    } else {
-        // Defender movement code.
-        if (exists(sharedA)) {
-            // Make sure we don't see anything
-            if (canActivateSensors()) activateSensors();
-            // Someone's at the left side of the arena and doesn't see any baddies.
-            moveTo(arenaWidth - 2, destinationY);
-        }
-
-        // We're here but don't see anything. Let the boys know.
-        const enemyX = 3;
-        if (getDistanceTo(enemyX, destinationY) <= 1 && areSensorsActivated()) {
-            sharedA = "clear";
-        }
-        moveTo(enemyX, destinationY);
-    }
-};
-
+/**
+ * Missile micro: think Stalker micro from SC2.
+ * Good for dealing with those pesky melee/teleporting/zapper units.
+ *
+ * Suggested loadout:
+ * - missiles 3
+ * - thrusters 3
+ * - 1 in other equipment
+ *
+ * Situationally, this means...
+ * - shield 1: is generally good all around
+ * - zapper 1: good if cornered by melee units
+ * - reflect 1: if fighting other missiles (this will generally dodge lasers)
+ * - regen 1: if fighting slow (no thrusters) melee units
+ */
 const update = function() {
     // Do we see anything nearby?
     const closestEnemy = findEntity(
@@ -76,22 +34,23 @@ const update = function() {
         SORT_ASCENDING
     );
     if (!exists(closestEnemyBot)) {
-        // It's not a bot, so just attack blindly
-        // DON'T use sensors here...gets us into trouble.
-        // Just happily bash the Chip/CPU if the other bots hasn't noticed us.
-        // Edge case: there is an artillery w/ sensors sitting on the other side.
-        // if (canActivateSensors()) activateSensors();
+        // Only thing left here is a chip.
+        // DON'T always use sensors here...gets us into trouble.
+        // Just happily bash the Chip if the other bots hasn't noticed us.
+        // If we're bashing a CPU though, then don't let artillery shoot us from out of range.
+        const enemyCpu = findEntity(
+            ENEMY,
+            CPU,
+            SORT_BY_DISTANCE,
+            SORT_ASCENDING
+        );
+        if (exists(enemyCpu) && canActivateSensors()) activateSensors();
         if (isAttacker) figureItOut();
         else defaultMove();
-    } else {
-        // We have seen some enemies. Go toward the checkpoint
-        sharedA = undefined;
     }
 
-    // Protect against missiles/lasers if we have reflection
-    if (canReflect()) reflect();
-    // Maybe this loses advantage vs melee? Not if we're fast
-    // if (canShield()) shield();
+    // At this point we know there is an enemy bot nearby.
+    setEnemiesSeen();
 
     const allEnemyBots = findEntities(ENEMY, BOT, false);
     const numEnemyBots = size(allEnemyBots);
@@ -99,20 +58,27 @@ const update = function() {
 
     tryEvadeLasers(closestEnemyBot, numEnemyBots);
 
+    // Protect against missiles/lasers if we have reflection
+    if (enemyBotDistance < 5.1) {
+        tryReflect();
+        tryShieldSelf();
+    }
+
     // Prefer to be farther but occasionally shoot from closer
-    let evadeThreshold;
+    // Farther is better to avoid zappers / inferno zappers, but does less damage
+    // > 3 also avoids Level 2 and lower missiles, so we can kite those.
+    // At least on bigger maps.
+
+    let evadeThreshold = 3.1;
     if (percentChance(40)) evadeThreshold = 2.9;
-    else evadeThreshold = 3.1;
 
-    // There's an enemy nearby but we can't attack it, or there are too many.
-    // This assumes we are armed with artillery, which has min range 7, max range 10
-    // 3 seems to keep us out of zapper range.
     if (enemyBotDistance < evadeThreshold) {
-        debugLog(x + " " + y + " evading");
-
         // Cloak earlier if they are super close
-        if (enemyBotDistance <= 1.6) {
-            if (canCloak()) cloak();
+        if (enemyBotDistance < 2.1) {
+            tryCloak();
+            tryShieldSelf();
+            // Sometimes it's better to just run
+            if (canZap() && percentChance(50)) zap();
         }
 
         // We're diagonally positioned from the enemy. Go in the direction with more space.
@@ -140,17 +106,13 @@ const update = function() {
         }
 
         // Can't move, last ditch cloak
-        if (canCloak()) cloak();
-        if (canShield()) shield();
+        tryCloak();
+        tryShieldSelf();
+        tryZap();
     }
 
     // Shoot if we're out of evasive maneuvers
-    // At the lowest health bot if possible
-    if (willMissilesHit()) {
-        const gank = findEntity(ENEMY, BOT, SORT_BY_LIFE, SORT_ASCENDING);
-        if (getDistanceTo(gank) <= 4) fireMissiles(gank);
-        fireMissiles();
-    }
+    tryFireMissiles();
 
     defaultMove();
 };

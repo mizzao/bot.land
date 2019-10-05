@@ -89,6 +89,8 @@ declare function reflect(): void;
 declare function canReflect(): boolean;
 declare function shield(): void;
 declare function canShield(): boolean;
+declare function zap(): void;
+declare function canZap(): boolean;
 
 // Variables
 declare const x: number;
