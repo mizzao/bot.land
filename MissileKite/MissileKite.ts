@@ -14,6 +14,19 @@
  * - regen 1: if fighting slow (no thrusters) melee units
  */
 const update = function() {
+    // If it's the first round of the game, take a shot before anyone turns on
+    // reflection. This is especially advantageous for defenders who seem to get
+    // their turns first before attackers.
+    //
+    // TODO: this is janky because it depends on number of bots we have in the arena.
+    let potshotThreshold = 5;
+    if (isAttacker) potshotThreshold = 4;
+    if (!exists(sharedE) || sharedE < potshotThreshold) {
+        if (!exists(sharedE)) sharedE = 1;
+        else sharedE = sharedE + 1;
+        tryFireMissiles();
+    }
+
     // Do we see anything nearby?
     const closestEnemy = findEntity(
         ENEMY,

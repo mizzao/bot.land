@@ -97,8 +97,9 @@ declare function cloak(): void;
 declare function canCloak(): boolean;
 declare function reflect(): void;
 declare function canReflect(): boolean;
-declare function shield(): void;
-declare function canShield(): boolean;
+declare function shield(entity?: Entity): void;
+declare function canShield(entity?: Entity): boolean;
+declare function isShielded(entity?: Entity): boolean;
 declare function zap(): void;
 declare function canZap(): boolean;
 
