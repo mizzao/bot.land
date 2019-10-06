@@ -48,7 +48,7 @@ const update = function() {
     }
 
     // At this point we know there is an enemy bot nearby.
-    setEnemiesSeen();
+    setEnemySeen(closestEnemyBot);
 
     const allEnemyBots = findEntities(ENEMY, BOT, false);
     const numEnemyBots = size(allEnemyBots);

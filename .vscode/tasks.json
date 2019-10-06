@@ -1,5 +1,5 @@
 {
-    // TODO: convert these to grunt tasks or something
+    // TODO: convert these to grunt tasks or something, and less repetitive
     "version": "2.0.0",
     "tasks": [
         {
@@ -20,10 +20,14 @@
                 "s/var //g",
                 "MissileKite/bot.js"
             ],
-            "group": "build",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
             "dependsOn": [
                 "MissileKite compile"
-            ]
+            ],
+            "problemMatcher": []
         },
         {
             "label": "ZapKite compile",
@@ -43,12 +47,32 @@
                 "s/var //g",
                 "ZapKite/bot.js"
             ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
+            "group": "build",
             "dependsOn": [
                 "ZapKite compile"
+            ]
+        },
+        {
+            "label": "SmartMelee compile",
+            "type": "typescript",
+            "tsconfig": "SmartMelee/tsconfig.json",
+            "problemMatcher": [
+                "$tsc"
+            ],
+            "group": "build"
+        },
+        {
+            "label": "SmartMelee output",
+            "type": "shell",
+            "command": "sed",
+            "args": [
+                "-i",
+                "s/var //g",
+                "SmartMelee/bot.js"
+            ],
+            "group": "build",
+            "dependsOn": [
+                "SmartMelee compile"
             ]
         }
     ]

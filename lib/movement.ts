@@ -42,46 +42,103 @@ const defaultMove = function() {
     // Need to modify figureItOut for this
 
     // Where to go?
-    const middleY = floor(arenaHeight / 2);
     if (isAttacker) {
-        const destinationX = arenaWidth - 1;
-        moveTo(destinationX, middleY);
+        const cpuX = arenaWidth - 1;
+        const cpuY = floor(arenaHeight / 2);
+        moveTo(cpuX, cpuY);
     } else {
-        // Defender movement code.
-        if (areEnemiesClear()) {
-            // Make sure we don't see anything
-            if (canActivateSensors()) activateSensors();
-            // Someone's at the left side of the arena and doesn't see any baddies.
-            moveTo(arenaWidth - 2, middleY);
-        }
-
-        // We're here but don't see anything. Let the boys know.
-        const leftX = 2;
-        if (getDistanceTo(leftX, middleY) <= 1 && areSensorsActivated()) {
-            setEnemiesClear();
-        }
-        moveTo(leftX, middleY);
+        defenderMove();
     }
 };
 
 /**
  * We have seen some baddies. Setting this causes other bots to move accordingly
- * to the checkpoint above.
+ * to the enemy's location.
  */
-const setEnemiesSeen = function(): void {
-    sharedA = undefined;
+const setEnemySeen = function(enemy: Entity): void {
+    // There are 5 shared variables, A-E.
+    // - shared(A,B): location of one last seen enemy
+    // - shared(C,D): location of second last seen enemy, that is not close to
+    //   the first.
+    //
+    // Attack order: first enemy, second enemy (not close to first), finally
+    // cpu.
+
+    // Record 1st location if we don't already have one.
+    if (!exists(sharedA)) {
+        sharedA = enemy.x;
+        sharedB = enemy.y;
+        return;
+    }
+    const locOneDiff = abs(enemy.x - sharedA) + abs(enemy.y - sharedB);
+    // If it's sufficiently close, count it as the same "area" and just
+    // update.
+    if (locOneDiff < 6) {
+        sharedA = enemy.x;
+        sharedB = enemy.y;
+        return;
+    }
+
+    // This seems like a different location. Do we have something recorded for location 2?
+    if (!exists(sharedC)) {
+        sharedC = enemy.x;
+        sharedD = enemy.y;
+        return;
+    }
+    const locTwoDiff = abs(enemy.x - sharedC) + abs(enemy.y - sharedD);
+    if (locTwoDiff < 8) {
+        sharedC = enemy.x;
+        sharedD = enemy.y;
+        return;
+    }
+
+    // Shouldn't get here, but if so you're on your own...
 };
 
 /**
- * We're at the checkpoint and don't see any enemies, everyone go home.
+ * If we don't see anyone, move to the closer of the two enemy locations, if
+ * they exist. If we are close to one of the locations and no one's there,
+ * specify that it is clear.
  */
-const setEnemiesClear = function(): void {
-    sharedA = "clear";
-};
+const defenderMove = function(): void {
+    // Check if we're close to either of the known enemy locations, and if we
+    // don't see anyone there (with sensors) clear it.
+    if (exists(sharedA)) {
+        if (getDistanceTo(sharedA, sharedB) <= 1) {
+            tryActivateSensors();
+            if (areSensorsActivated()) {
+                sharedA = undefined;
+                sharedB = undefined;
+            }
+        }
+    }
+    if (exists(sharedC)) {
+        if (getDistanceTo(sharedC, sharedD) <= 1) {
+            tryActivateSensors();
+            if (areSensorsActivated()) {
+                sharedC = undefined;
+                sharedD = undefined;
+            }
+        }
+    }
 
-/**
- * Have we seen enemies recently?
- */
-const areEnemiesClear = function(): boolean {
-    return sharedA == "clear";
+    const cpuX = arenaWidth - 1;
+    const cpuY = floor(arenaHeight / 2);
+
+    if (!exists(sharedA) && !exists(sharedC)) {
+        moveTo(cpuX, cpuY);
+    }
+    if (exists(sharedA) && !exists(sharedC)) {
+        moveTo(sharedA, sharedB);
+    }
+    if (exists(sharedC) && !exists(sharedA)) {
+        moveTo(sharedC, sharedD);
+    }
+
+    // Both locations exist, attack to the closest one.
+    const dist1 = getDistanceTo(sharedA, sharedB);
+    const dist2 = getDistanceTo(sharedC, sharedD);
+
+    if (dist1 <= dist2) moveTo(sharedA, sharedB);
+    else moveTo(sharedC, sharedD);
 };

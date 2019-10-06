@@ -50,16 +50,17 @@ const update = function() {
     }
 
     // At this point we know there is an enemy bot nearby.
-    setEnemiesSeen();
+    setEnemySeen(closestEnemyBot);
 
     const allEnemyBots = findEntities(ENEMY, BOT, false);
     const numEnemyBots = size(allEnemyBots);
     const enemyBotDistance = getDistanceTo(closestEnemyBot);
 
-    tryEvadeLasers(closestEnemyBot, numEnemyBots);
-
     const allFriendlyBots = findEntities(IS_OWNED_BY_ME, BOT, true);
     const numFriendlyBots = size(allFriendlyBots);
+
+    // Heuristic: on defense don't evade lasers, just let the tanks do that.
+    if (numFriendlyBots < 5) tryEvadeLasers(closestEnemyBot, numEnemyBots);
 
     // Protect against missiles/lasers if we have reflection
     if (enemyBotDistance < 5.1) {
@@ -75,6 +76,7 @@ const update = function() {
     let evadeThreshold = 3.1;
     // If we're outnumbering them, willing to shoot from closer
     if (numFriendlyBots >= 3 && numEnemyBots <= 1) evadeThreshold = 2.9;
+    // On defense this means
 
     if (enemyBotDistance < evadeThreshold) {
         // Cloak earlier if they are super close

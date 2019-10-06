@@ -1,3 +1,7 @@
 {
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "[typescript]": {
+        // The bot.land editor uses 4 spaces.
+        "editor.tabSize": 4
+    }
 }

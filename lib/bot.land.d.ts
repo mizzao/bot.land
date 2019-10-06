@@ -79,6 +79,13 @@ declare function pursue(entity: Entity): void;
 declare function pursue(x: number, y: number): void;
 
 // Functions - Weaponry
+declare function canCharge(): boolean;
+declare function willMeleeHit(entity?: Entity): boolean;
+declare function melee(entity?: Entity): void;
+declare function willArtilleryHit(entity?: Entity): boolean;
+declare function fireArtillery(entity?: Entity): void;
+declare function willLasersHit(entity?: Entity): boolean;
+declare function fireLasers(entity?: Entity): void;
 declare function willMissilesHit(entity?: Entity): boolean;
 declare function fireMissiles(entity?: Entity): void;
 

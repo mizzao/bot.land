@@ -43,6 +43,12 @@ const tryFireMissiles = function() {
     }
 };
 
+const tryActivateSensors = function() {
+    // Sensors last 3 turns and have 6 cooldown, so don't need to count turns
+    // like we could with a shield.
+    if (canActivateSensors()) activateSensors();
+};
+
 const tryCloak = function() {
     if (canCloak()) cloak();
 };
@@ -52,6 +58,8 @@ const tryReflect = function() {
 };
 
 const tryShieldSelf = function() {
+    // TODO: we could wait longer if we have a shield already. But it could be
+    // damaged so maybe better to refresh.
     if (canShield()) shield();
 };
 
