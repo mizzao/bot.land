@@ -139,6 +139,7 @@ const defenderMove = function(): void {
     const dist1 = getDistanceTo(sharedA, sharedB);
     const dist2 = getDistanceTo(sharedC, sharedD);
 
-    if (dist1 <= dist2) moveTo(sharedA, sharedB);
+    if (dist1 == dist2 && percentChance(50)) moveTo(sharedA, sharedB);
+    else if (dist1 < dist2) moveTo(sharedA, sharedB);
     else moveTo(sharedC, sharedD);
 };

@@ -31,6 +31,50 @@ const tryEvadeLasers = function(closestEnemyBot: Entity, numEnemyBots: number) {
 };
 
 /**
+ * This micros a bot away from a target enemy, attempting to stay at a diagonal
+ * distance.
+ * @param closestEnemyBot
+ * @param numEnemyBots
+ */
+const tryEvadeEnemy = function(closestEnemyBot: Entity, numEnemyBots: number) {
+    // We're diagonally positioned from the enemy. Go in the direction with more space.
+    // Prefer going backward to going forward, which can get us stuck.
+    // TODO don't always run down from top left
+    if (canMove("backward") && x <= closestEnemyBot.x) {
+        move("backward");
+    }
+    // TODO we should move backward when there's one bot too
+    // clean this code up
+    if (canMove("up") && y <= closestEnemyBot.y) {
+        move("up");
+    }
+    if (canMove("down") && y >= closestEnemyBot.y) {
+        move("down");
+    }
+    if (canMove("backward")) {
+        if (numEnemyBots > 1) move("backward");
+    }
+    if (canMove("forward") && x >= closestEnemyBot.x && numEnemyBots <= 1) {
+        move("forward");
+    }
+    if (canMove("backward")) {
+        move("backward");
+    }
+};
+
+const tryMeleeSmart = function() {
+    if (willMeleeHit()) {
+        const gank = findEntity(ENEMY, BOT, SORT_BY_LIFE, SORT_ASCENDING);
+        // I think we need to add the extra willMeleeHit check here because I'm
+        // not sure melee attacks (1,1) positions
+        if (getDistanceTo(gank) <= 2 && canCharge() && willMeleeHit(gank))
+            melee(gank);
+        else if (getDistanceTo(gank) <= 1) melee(gank);
+        // If we can't hit our target of choice, hit anyway
+        melee();
+    }
+};
+/**
  * A smart missile firing function that shoots at the enemy bot that is visible
  * with lowest health, if it is in range.
  */

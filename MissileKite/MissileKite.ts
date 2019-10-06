@@ -87,9 +87,11 @@ const update = function() {
     // At least on bigger maps.
 
     let evadeThreshold = 3.1;
-    // If we're outnumbering them, willing to shoot from closer
-    if (numFriendlyBots >= 3 && numEnemyBots <= 1) evadeThreshold = 2.9;
-    // On defense this means
+    // Under some conditions shoot from closer to get more shots:
+    // - only one enemy bot (especially if there are more of us)
+    // - we're getting backed into the wall (often ends up running around)
+    // TODO update for attackers & defenders
+    if (numEnemyBots <= 1 || x <= 2) evadeThreshold = 2.9;
 
     if (enemyBotDistance < evadeThreshold) {
         // Cloak earlier if they are super close
@@ -100,29 +102,7 @@ const update = function() {
             if (canZap() && percentChance(50)) zap();
         }
 
-        // We're diagonally positioned from the enemy. Go in the direction with more space.
-        // Prefer going backward to going forward, which can get us stuck.
-        // TODO don't always run down from top left
-        if (canMove("backward") && x <= closestEnemyBot.x) {
-            move("backward");
-        }
-        // TODO we should move backward when there's one bot too
-        // clean this code up
-        if (canMove("up") && y <= closestEnemyBot.y) {
-            move("up");
-        }
-        if (canMove("down") && y >= closestEnemyBot.y) {
-            move("down");
-        }
-        if (canMove("backward")) {
-            if (numEnemyBots > 1) move("backward");
-        }
-        if (canMove("forward") && x >= closestEnemyBot.x && numEnemyBots <= 1) {
-            move("forward");
-        }
-        if (canMove("backward")) {
-            move("backward");
-        }
+        tryEvadeEnemy(closestEnemyBot, numEnemyBots);
 
         // Can't move, last ditch cloak
         tryCloak();

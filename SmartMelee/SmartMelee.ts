@@ -78,11 +78,7 @@ const update = function() {
     }
 
     // whack priority for melee
-    if (willMeleeHit()) {
-        const gankTarget = findEntity(ENEMY, BOT, SORT_BY_LIFE, SORT_ASCENDING);
-        if (getDistanceTo(gankTarget) <= 2 && canCharge()) melee(gankTarget);
-        else if (getDistanceTo(gankTarget) <= 1) melee(gankTarget);
-    }
+    tryMeleeSmart();
 
     // Use zapper on structures, even if not fighting
     const closestEnemy = findEntity(

@@ -60,6 +60,8 @@ declare function figureItOut(): void;
 // Functions - Math
 declare function abs(n: number): number;
 declare function floor(n: number): number;
+declare function max(...nums: number[]): number;
+declare function min(...nums: number[]): number;
 declare function percentChance(chance: number): boolean;
 declare function size(arr: any[]): number;
 
