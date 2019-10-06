@@ -76,7 +76,12 @@ const update = function() {
     let evadeThreshold = 3.1;
     // If we're outnumbering them, willing to shoot from closer
     if (numFriendlyBots >= 3 && numEnemyBots <= 1) evadeThreshold = 2.9;
-    // On defense this means
+    // On offense we should always try to back up if there are too many enemies,
+    // unless we have our back to the wall
+    if (isAttacker && numEnemyBots >= 3) {
+        // Back up more likely depending on how far we are from the enemy
+        evadeThreshold = 4.1;
+    }
 
     if (enemyBotDistance < evadeThreshold) {
         // Cloak earlier if they are super close
