@@ -71,6 +71,7 @@ const update = function() {
     if (exists(closestEnemy)) {
         const enemyDistance = getDistanceTo(closestEnemy);
         if (enemyDistance < 2.1 && canZap()) zap();
+        figureItOut();
     } else {
         // No enemies visible. Move with the team.
         defaultMove();

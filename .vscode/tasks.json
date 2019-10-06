@@ -73,7 +73,8 @@
             "group": "build",
             "dependsOn": [
                 "SmartMelee compile"
-            ]
+            ],
+            "problemMatcher": []
         }
     ]
 }
