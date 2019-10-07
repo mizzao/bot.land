@@ -71,7 +71,7 @@ const update = function() {
         }
     }
 
-    // whack priority for melee
+    // whack priority for melee (this will only hit bots)
     tryMeleeSmart();
 
     // Use zapper on structures, even if not fighting

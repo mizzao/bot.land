@@ -62,16 +62,26 @@ const tryEvadeEnemy = function(closestEnemyBot: Entity, numEnemyBots: number) {
     }
 };
 
+/**
+ * Smart melee. This will try to hit the bot with lowest health nearby if it is
+ * in melee range. It not hit a structure if an enemy bot is nearby, so if you
+ * want to do that, call melee() manually.
+ */
 const tryMeleeSmart = function() {
     if (willMeleeHit()) {
         const gank = findEntity(ENEMY, BOT, SORT_BY_LIFE, SORT_ASCENDING);
-        // I think we need to add the extra willMeleeHit check here because I'm
-        // not sure melee attacks (1,1) positions
+        // Try a charge-hit first before a normal hit. I'm not sure about the
+        // semantics of how willMeleeHit() works, so just being a bit extra
+        // careful.
         if (getDistanceTo(gank) <= 2 && canCharge() && willMeleeHit(gank))
             melee(gank);
         else if (getDistanceTo(gank) <= 1) melee(gank);
-        // If we can't hit our target of choice, hit anyway
-        melee();
+        // If we can't hit our target of choice, we'll still hit a close by bot
+        // (not chip or CPU)
+        const close = findEntity(ENEMY, BOT, SORT_BY_DISTANCE, SORT_ASCENDING);
+        if (getDistanceTo(close) <= 2 && canCharge() && willMeleeHit(close))
+            melee(close);
+        else if (getDistanceTo(close) <= 1) melee(close);
     }
 };
 /**
