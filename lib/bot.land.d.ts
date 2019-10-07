@@ -48,6 +48,12 @@ declare function findEntities(
     type: EntityMatchFlags,
     allowReturningSelf: boolean
 ): Entity[];
+declare function findEntitiesInRange(
+    friendlyOrEnemy: EntityMatchFlags,
+    type: EntityMatchFlags,
+    allowReturningSelf: boolean,
+    range: number
+);
 declare function findEntity(
     friendlyOrEnemy: EntityMatchFlags,
     type: EntityMatchFlags,
@@ -56,6 +62,9 @@ declare function findEntity(
 ): Entity;
 declare function getEntityAt(x: number, y: number): Entity;
 declare function figureItOut(): void;
+
+declare let array1: Entity[];
+declare let array2: Entity[];
 
 // Functions - Math
 declare function abs(n: number): number;

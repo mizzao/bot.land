@@ -39,6 +39,9 @@ const update = function() {
     // after shielding self (above) in the presence of enemies. This allows
     // shield zappers to support reflecting zappers!
     if (canShield()) {
+        // TODO: depending on how this is calculated, it can double shield
+        // people, which we don't want.
+
         // Try a few options.
         // First, lowest health
         tryShieldingFriend(
@@ -48,20 +51,11 @@ const update = function() {
         tryShieldingFriend(
             findEntity(IS_OWNED_BY_ME, BOT, SORT_BY_DISTANCE, SORT_ASCENDING)
         );
-        // Furthest away
-        tryShieldingFriend(
-            findEntity(IS_OWNED_BY_ME, BOT, SORT_BY_DISTANCE, SORT_DESCENDING)
-        );
-        // Max health (hopefully we don't get here)
-        tryShieldingFriend(
-            findEntity(IS_OWNED_BY_ME, BOT, SORT_BY_LIFE, SORT_DESCENDING)
-        );
-
-        // For loops currently broken, we can try again later
-        // const visibleFriends = findEntities(IS_OWNED_BY_ME, BOT, false);
-        // for (let i = 0; i < size(visibleFriends); i++) {
-        //     tryShieldingFriend(visibleFriends[i]);
-        // }
+        // Anyone else? Shield 3 has a range of 5.
+        array1 = findEntitiesInRange(IS_OWNED_BY_ME, BOT, false, 5);
+        for (let i = 0; i < size(array1); i++) {
+            tryShieldingFriend(array1[i]);
+        }
     }
 
     // Attack enemy bots over chips/CPU. This is a hack that forces melee bots

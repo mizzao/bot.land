@@ -1,6 +1,6 @@
 /**
- * Missile micro: think Stalker micro from SC2.
- * Good for dealing with those pesky melee/teleporting/zapper units.
+ * Missile micro: think Stalker micro from SC2. Good for dealing with those
+ * pesky melee/teleporting/zapper units.
  *
  * Suggested loadout:
  * - missiles 3
@@ -12,6 +12,9 @@
  * - zapper 1: good if cornered by melee units
  * - reflect 1: if fighting other missiles (this will generally dodge lasers)
  * - regen 1: if fighting slow (no thrusters) melee units
+ *
+ * Missiles 3, thrusters 2, shield 2 is possible to use against enemies with
+ * high reflect and no thrusters (it saves 1 reflection).
  */
 const update = function() {
     // If it's the first round of the game, take a shot before anyone turns on
@@ -91,6 +94,7 @@ const update = function() {
     // - only one enemy bot (especially if there are more of us)
     // - we're getting backed into the wall (often ends up running around)
     // TODO update for attackers & defenders
+    // TODO defenders should always shoot if friendly bots >= 5, cuz DPS...don't run.
     if (numEnemyBots <= 1 || x <= 2) evadeThreshold = 2.9;
 
     if (enemyBotDistance < evadeThreshold) {
