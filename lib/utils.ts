@@ -117,6 +117,35 @@ const tryShieldSelf = function() {
     if (canShield()) shield();
 };
 
+/**
+ * Try shielding any allies within a certain range. This allows us to share
+ * cooldown between bots.
+ * @param range
+ */
+const tryShieldFriendlyBots = function(range: number) {
+    if (canShield()) {
+        // Try a few options.
+        // First, lowest health
+        tryShieldFriend(
+            findEntity(IS_OWNED_BY_ME, BOT, SORT_BY_LIFE, SORT_ASCENDING)
+        );
+        // Closest
+        tryShieldFriend(
+            findEntity(IS_OWNED_BY_ME, BOT, SORT_BY_DISTANCE, SORT_ASCENDING)
+        );
+        // Anyone else? Shield 3 has a range of 5.
+        array1 = findEntitiesInRange(IS_OWNED_BY_ME, BOT, false, range);
+        for (let i = 0; i < size(array1); i++) {
+            tryShieldFriend(array1[i]);
+        }
+    }
+};
+
+const tryShieldFriend = function(friend: Entity): void {
+    // Not sure if canShield checks our shield range...
+    if (!isShielded(friend) && canShield(friend)) shield(friend);
+};
+
 const tryZap = function() {
     if (canZap()) zap();
 };

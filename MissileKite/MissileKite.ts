@@ -60,6 +60,10 @@ const update = function() {
             SORT_BY_DISTANCE,
             SORT_ASCENDING
         );
+        // Missile micro bot usually has shield 1, which has range 3. But
+        // sometimes we'll put shield 2 on it with lower thrusters.
+        tryShieldFriendlyBots(4);
+
         if (exists(enemyCpu) && canActivateSensors()) activateSensors();
         if (isAttacker) figureItOut();
         else defaultMove();
@@ -81,7 +85,11 @@ const update = function() {
     // Protect against missiles/lasers if we have reflection
     if (enemyBotDistance < 5.1) {
         tryReflect();
-        tryShieldSelf();
+        if (!isShielded()) {
+            tryShieldSelf();
+        } else {
+            tryShieldFriendlyBots(4);
+        }
     }
 
     // Prefer to be farther but shoot from closer when we have advantage
@@ -110,7 +118,7 @@ const update = function() {
 
         // Can't move, last ditch cloak
         tryCloak();
-        tryShieldSelf();
+        tryShieldSelf(); // re-boost our own shield if possible
         tryZap();
     }
 

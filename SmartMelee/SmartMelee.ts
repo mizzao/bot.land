@@ -38,25 +38,7 @@ const update = function() {
     // that can be shielded. This lets us share cooldown. Note this happens
     // after shielding self (above) in the presence of enemies. This allows
     // shield zappers to support reflecting zappers!
-    if (canShield()) {
-        // TODO: depending on how this is calculated, it can double shield
-        // people, which we don't want.
-
-        // Try a few options.
-        // First, lowest health
-        tryShieldingFriend(
-            findEntity(IS_OWNED_BY_ME, BOT, SORT_BY_LIFE, SORT_ASCENDING)
-        );
-        // Closest
-        tryShieldingFriend(
-            findEntity(IS_OWNED_BY_ME, BOT, SORT_BY_DISTANCE, SORT_ASCENDING)
-        );
-        // Anyone else? Shield 3 has a range of 5.
-        array1 = findEntitiesInRange(IS_OWNED_BY_ME, BOT, false, 5);
-        for (let i = 0; i < size(array1); i++) {
-            tryShieldingFriend(array1[i]);
-        }
-    }
+    tryShieldFriendlyBots(5);
 
     // Attack enemy bots over chips/CPU. This is a hack that forces melee bots
     // to go for enemy bots over structures. Attack priority will take care of
@@ -89,10 +71,6 @@ const update = function() {
         // No enemies visible. Move with the team.
         defaultMove();
     }
-};
-
-const tryShieldingFriend = function(friend: Entity): void {
-    if (!isShielded(friend) && canShield(friend)) shield(friend);
 };
 
 const checkDefenseActivation = function(enemyBotDistance: number): void {
