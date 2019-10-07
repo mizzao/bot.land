@@ -101,6 +101,27 @@ const setEnemySeen = function(enemy: Entity): void {
  * specify that it is clear.
  */
 const defenderMove = function(): void {
+    const cpuX = arenaWidth - 2;
+    const cpuY = floor(arenaHeight / 2);
+
+    // If we're all balled up near the CPU, there's enough of us, and no one sees any
+    // enemies, go out and investigate the chips and see if they're okay.
+    if (
+        !exists(sharedA) &&
+        !exists(sharedC) &&
+        getDistanceTo(cpuX, cpuY) <= 1
+    ) {
+        const allFriends = findEntitiesInRange(IS_OWNED_BY_ME, BOT, true, 3);
+        const numFriends = size(allFriends);
+        if (numFriends >= 6) {
+            // XXX These are the locations of my chips in the level 3 defense
+            sharedA = cpuX - 4;
+            sharedB = cpuY - 3;
+            sharedC = cpuX - 4;
+            sharedD = cpuY + 3;
+        }
+    }
+
     // Check if we're close to either of the known enemy locations, and if we
     // don't see anyone there (with sensors) clear it.
     if (exists(sharedA)) {
@@ -121,9 +142,6 @@ const defenderMove = function(): void {
             }
         }
     }
-
-    const cpuX = arenaWidth - 1;
-    const cpuY = floor(arenaHeight / 2);
 
     if (!exists(sharedA) && !exists(sharedC)) {
         moveTo(cpuX, cpuY);
