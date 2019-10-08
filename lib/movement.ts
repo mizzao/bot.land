@@ -3,8 +3,10 @@
  * use this in place of figureItOut() to avoid unwanted premature utility
  * activations. Assumes the script will generally deal with enemies if they get
  * in range.
+ *
+ * @param isArtillery if artillery, will not move <5 units from target.
  */
-const defaultMove = function() {
+const defaultMove = function(isArtillery?: boolean) {
     // React to enemy structures
     const closestEnemyChip = findEntity(
         ENEMY,
@@ -24,7 +26,9 @@ const defaultMove = function() {
         SORT_ASCENDING
     );
     if (exists(closestEnemyBot)) {
-        if (canMoveTo(closestEnemyBot) && getDistanceTo(closestEnemyBot) > 1) {
+        const dist = getDistanceTo(closestEnemyBot);
+        if (canMoveTo(closestEnemyBot) && dist > 1) {
+            if (isArtillery && dist <= 5) return;
             pursue(closestEnemyBot);
         }
     }
@@ -45,9 +49,10 @@ const defaultMove = function() {
     if (isAttacker) {
         const cpuX = arenaWidth - 1;
         const cpuY = floor(arenaHeight / 2);
+        if (isArtillery && getDistanceTo(cpuX, cpuY) <= 5) return;
         moveTo(cpuX, cpuY);
     } else {
-        defenderMove();
+        defenderMove(isArtillery);
     }
 };
 
@@ -130,8 +135,10 @@ const setEnemySeen = function(enemy: Entity): void {
  * If we don't see anyone, move to the closer of the two enemy locations, if
  * they exist. If we are close to one of the locations and no one's there,
  * specify that it is clear.
+ *
+ * @param isArtillery
  */
-const defenderMove = function(): void {
+const defenderMove = function(isArtillery?: boolean): void {
     const cpuX = arenaWidth - 2;
     const cpuY = floor(arenaHeight / 2);
 
@@ -174,21 +181,30 @@ const defenderMove = function(): void {
         }
     }
 
-    if (!exists(sharedA) && !exists(sharedC)) {
-        moveTo(cpuX, cpuY);
-    }
+    // Default !exists(sharedA) && !exists(sharedC)
+    let targetX = cpuX;
+    let targetY = cpuY;
+
     if (exists(sharedA) && !exists(sharedC)) {
-        moveTo(sharedA, sharedB);
-    }
-    if (exists(sharedC) && !exists(sharedA)) {
-        moveTo(sharedC, sharedD);
+        targetX = sharedA;
+        targetY = sharedB;
+    } else if (exists(sharedC) && !exists(sharedA)) {
+        targetX = sharedC;
+        targetY = sharedD;
+    } else if (exists(sharedA) && exists(sharedC)) {
+        // Both locations exist, attack to the closest one.
+        const dist1 = getDistanceTo(sharedA, sharedB);
+        const dist2 = getDistanceTo(sharedC, sharedD);
+
+        if (dist1 < dist2 || (dist1 == dist2 && percentChance(50))) {
+            targetX = sharedA;
+            targetY = sharedB;
+        } else {
+            targetX = sharedC;
+            targetY = sharedD;
+        }
     }
 
-    // Both locations exist, attack to the closest one.
-    const dist1 = getDistanceTo(sharedA, sharedB);
-    const dist2 = getDistanceTo(sharedC, sharedD);
-
-    if (dist1 == dist2 && percentChance(50)) moveTo(sharedA, sharedB);
-    else if (dist1 < dist2) moveTo(sharedA, sharedB);
-    else moveTo(sharedC, sharedD);
+    if (isArtillery && getDistanceTo(targetX, targetY) <= 5) return;
+    moveTo(targetX, targetY);
 };
