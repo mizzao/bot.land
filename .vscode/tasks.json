@@ -97,7 +97,7 @@
             ],
             "group": "build",
             "dependsOn": [
-                "SmartMelee compile"
+                "ArtilleryMicro compile"
             ],
             "problemMatcher": []
         }

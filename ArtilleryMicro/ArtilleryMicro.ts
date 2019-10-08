@@ -1,5 +1,14 @@
+/**
+ * Micro artillery
+ *
+ * Defense loadout: artillery 3, shield 3, thrusters 1
+ * Offense loadout: artillery 3, regen 3, thrusters 1
+ */
 const update = function() {
     attackerUpdateLocation(x, y);
+
+    // TODO artillery potshot? It's less important because it probably won't
+    // hit.
 
     // Do we see anything nearby?
     const closestEnemy = findEntity(
@@ -19,7 +28,7 @@ const update = function() {
             if (areSensorsActivated() || percentChance(50)) defaultMove();
             else return;
         } else {
-            defenderMove();
+            defenderMove(true);
         }
     }
 
@@ -36,7 +45,7 @@ const update = function() {
             if (areSensorsActivated() || percentChance(50)) defaultMove();
             else return;
         } else {
-            defenderMove();
+            defenderMove(true);
         }
     }
 
@@ -123,7 +132,7 @@ const update = function() {
     tryFireArtillery();
     tryActivateSensors();
 
-    defaultMove();
+    defaultMove(true);
 };
 
 const distanceToCorner = function(): number {

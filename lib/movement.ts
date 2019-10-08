@@ -3,8 +3,10 @@
  * use this in place of figureItOut() to avoid unwanted premature utility
  * activations. Assumes the script will generally deal with enemies if they get
  * in range.
+ *
+ * @param isArtillery if artillery, will not move <5 units from target.
  */
-const defaultMove = function() {
+const defaultMove = function(isArtillery?: boolean) {
     // React to enemy structures
     const closestEnemyChip = findEntity(
         ENEMY,
@@ -24,7 +26,9 @@ const defaultMove = function() {
         SORT_ASCENDING
     );
     if (exists(closestEnemyBot)) {
-        if (canMoveTo(closestEnemyBot) && getDistanceTo(closestEnemyBot) > 1) {
+        const dist = getDistanceTo(closestEnemyBot);
+        if (canMoveTo(closestEnemyBot) && dist > 1) {
+            if (isArtillery && dist <= 5) return;
             pursue(closestEnemyBot);
         }
     }
@@ -45,9 +49,10 @@ const defaultMove = function() {
     if (isAttacker) {
         const cpuX = arenaWidth - 1;
         const cpuY = floor(arenaHeight / 2);
+        if (isArtillery && getDistanceTo(cpuX, cpuY) <= 5) return;
         moveTo(cpuX, cpuY);
     } else {
-        defenderMove();
+        defenderMove(isArtillery);
     }
 };
 
@@ -172,8 +177,10 @@ const clearLoc2 = function(): void {
  * If we don't see anyone, move to the closer of the two enemy locations, if
  * they exist. If we are close to one of the locations and no one's there,
  * specify that it is clear.
+ *
+ * @param isArtillery
  */
-const defenderMove = function(): void {
+const defenderMove = function(isArtillery?: boolean): void {
     const cpuX = arenaWidth - 2;
     const cpuY = floor(arenaHeight / 2);
 
@@ -203,7 +210,7 @@ const defenderMove = function(): void {
 
     // Check if we're close to either of the known enemy locations, and if we
     // don't see anyone there (with sensors) clear it.
-
+    // TODO: artillery should be able to clear targets too.
     if (size(array1) > 0 && getDistanceTo(array1[0], array1[1]) <= 1) {
         tryActivateSensors();
         if (areSensorsActivated()) clearLoc1();
@@ -213,22 +220,34 @@ const defenderMove = function(): void {
         if (areSensorsActivated()) clearLoc2();
     }
 
+    // Default size(array1) == 0 && size(array2) == 0
+    let targetX = cpuX;
+    let targetY = cpuY;
+
     // Figure out where we're moving.
-    if (size(array1) == 0 && size(array2) == 0) {
-        moveTo(cpuX, cpuY);
+    if (size(array1) > 0 && size(array2) === 0) {
+        targetX = array1[0];
+        targetY = array1[1];
     }
-    if (size(array1) > 0 && size(array2) == 0) {
-        moveTo(array1[0], array1[1]);
+    if (size(array2) > 0 && size(array1) === 0) {
+        targetX = array2[0];
+        targetY = array2[1];
     }
-    if (size(array2) > 0 && size(array1) == 0) {
-        moveTo(array2[0], array2[1]);
+    if (size(array1) > 0 && size(array2) > 0) {
+        // Both locations exist, attack to the closest one.
+        const dist1 = getDistanceTo(array1[0], array1[1]);
+        const dist2 = getDistanceTo(array2[0], array2[1]);
+
+        if (dist1 < dist2 || (dist1 == dist2 && percentChance(50))) {
+            targetX = array1[0];
+            targetY = array1[1];
+        } else {
+            targetX = array2[0];
+            targetY = array2[1];
+        }
     }
 
-    // Both locations exist, attack to the closest one.
-    const dist1 = getDistanceTo(array1[0], array1[1]);
-    const dist2 = getDistanceTo(array2[0], array2[1]);
-
-    if (dist1 == dist2 && percentChance(50)) moveTo(array1[0], array1[1]);
-    else if (dist1 < dist2) moveTo(array1[0], array1[1]);
-    else moveTo(array2[0], array2[1]);
+    // Artillery should not get too close.
+    if (isArtillery && getDistanceTo(targetX, targetY) <= 5) return;
+    moveTo(targetX, targetY);
 };
