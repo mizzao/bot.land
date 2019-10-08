@@ -146,6 +146,10 @@ const tryShieldFriend = function(friend: Entity): void {
     if (!isShielded(friend) && canShield(friend)) shield(friend);
 };
 
+const tryLayMine = function() {
+    if (canLayMine()) layMine();
+};
+
 const tryZap = function() {
     if (canZap()) zap();
 };

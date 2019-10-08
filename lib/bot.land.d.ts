@@ -111,6 +111,8 @@ declare function canReflect(): boolean;
 declare function shield(entity?: Entity): void;
 declare function canShield(entity?: Entity): boolean;
 declare function isShielded(entity?: Entity): boolean;
+declare function layMine(): void;
+declare function canLayMine(): boolean;
 declare function zap(): void;
 declare function canZap(): boolean;
 

@@ -12,6 +12,7 @@
  * - zapper 1: good if cornered by melee units
  * - reflect 1: if fighting other missiles (this will generally dodge lasers)
  * - regen 1: if fighting slow (no thrusters) melee units
+ * - mine 1
  *
  * Missiles 3, thrusters 2, shield 2 is possible to use against enemies with
  * high reflect and no thrusters (it saves 1 reflection).
@@ -80,7 +81,9 @@ const update = function() {
     const numFriendlyBots = size(allFriendlyBots);
 
     // Heuristic: on defense don't evade lasers, just let the tanks do that.
-    if (numFriendlyBots < 5) tryEvadeLasers(closestEnemyBot, numEnemyBots);
+    // Mine layers don't evade lasers, you want them to come follow in.
+    if (!canLayMine() && numFriendlyBots < 5)
+        tryEvadeLasers(closestEnemyBot, numEnemyBots);
 
     // Protect against missiles/lasers if we have reflection
     if (enemyBotDistance < 5.1) {
@@ -92,6 +95,11 @@ const update = function() {
         }
     }
 
+    // Mine layers should not do it from too far, so they have time to lay mine
+    if (enemyBotDistance < 4.1) tryLayMine();
+    // When close: not every time, as this can cause us to slow down too much.
+    if (enemyBotDistance < 3.1 && percentChance(30)) tryLayMine();
+
     // Prefer to be farther but shoot from closer when we have advantage
     // Farther is better to avoid zappers / inferno zappers, but does less damage
     // > 3 also avoids Level 2 and lower missiles, so we can kite those.
@@ -101,11 +109,14 @@ const update = function() {
     // Under some conditions shoot from closer to get more shots:
     // - only one enemy bot (especially if there are more of us)
     // - we're getting backed into the wall (often ends up running around)
+    //
     // TODO update for attackers & defenders
     // TODO defenders should always shoot if friendly bots >= 5, cuz DPS...don't run.
     if (numEnemyBots <= 1 || x <= 2) evadeThreshold = 2.9;
 
     if (enemyBotDistance < evadeThreshold) {
+        if (percentChance(25)) tryLayMine();
+
         // Cloak earlier if they are super close
         if (enemyBotDistance < 2.1) {
             tryCloak();
@@ -114,7 +125,11 @@ const update = function() {
             if (canZap() && percentChance(50)) zap();
         }
 
+        // TODO!! mine laying will work better if we don't always evade backward
         tryEvadeEnemy(closestEnemyBot, numEnemyBots);
+
+        // Mine has a higer chance here but still need to run, bogs us down
+        if (percentChance(45)) tryLayMine();
 
         // Can't move, last ditch cloak
         tryCloak();
