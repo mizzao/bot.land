@@ -18,6 +18,9 @@
  * high reflect and no thrusters (it saves 1 reflection).
  */
 const update = function() {
+    // Update our location for the team average
+    attackerUpdateLocation(x, y);
+
     // If it's the first round of the game, take a shot before anyone turns on
     // reflection. This is especially advantageous for defenders who seem to get
     // their turns first before attackers.

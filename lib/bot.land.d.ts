@@ -82,7 +82,7 @@ declare function canMoveTo(x: number, y: number): boolean;
 declare function getDistanceTo(entity: Entity): number;
 declare function getDistanceTo(x: number, y: number): number;
 
-declare function move(dir: Direction): void;
+declare function move(dir?: Direction): void;
 declare function moveTo(entity: Entity): void;
 declare function moveTo(x: number, y: number): void;
 // Alias of moveTo
@@ -106,6 +106,7 @@ declare function canActivateSensors(): boolean;
 declare function areSensorsActivated(): boolean;
 declare function cloak(): void;
 declare function canCloak(): boolean;
+declare function isCloaked(): boolean;
 declare function reflect(): void;
 declare function canReflect(): boolean;
 declare function shield(entity?: Entity): void;

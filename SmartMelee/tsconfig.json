@@ -3,7 +3,7 @@
     "target": "es3",
     "module": "none",
     "sourceMap": false,
-    "outFile": "bot.js"
+    "outFile": "../build/SmartMelee.js"
   },
   "files": [
     "SmartMelee.ts"

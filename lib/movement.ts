@@ -52,8 +52,37 @@ const defaultMove = function() {
 };
 
 /**
+ * Attacker movement code works as follows:
+ *
+ * shared(A, B) records the centroid of the team. It is updated using a hacky
+ * exponentially-weighted moving average. Certain units update and respond to
+ * this EWMA (microing bots), while others just respond to it but don't update
+ * (repair bots).
+ *
+ * For bots that care about being near the group, the further away they are from
+ * this centroid the more they will be likely to move toward it.
+ */
+const attackerUpdateLocation = function(xCoord: number, yCoord: number): void {
+    // First turn update
+    if (!exists(sharedA)) {
+        sharedA = xCoord;
+        sharedB = yCoord;
+        return;
+    }
+
+    const alpha = 0.3;
+    // This is a weird EWMA, because we don't know the number of bots (as they
+    // die). With many bots it needs to be low enough that the average doesn't
+    // jump around a lot, but with a single bot it needs to be high enough that
+    // the bot can move around without impeding itself too much.
+    sharedA = xCoord * alpha + sharedA * (1 - alpha);
+    sharedB = yCoord * alpha + sharedB * (1 - alpha);
+};
+
+/**
  * We have seen some baddies. Setting this causes other bots to move accordingly
  * to the enemy's location.
+ * @param enemy
  */
 const setEnemySeen = function(enemy: Entity): void {
     // There are 5 shared variables, A-E.
