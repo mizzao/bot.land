@@ -1,6 +1,9 @@
 /**
  * Smart melee bot. Can use melee, zapper, and other equipment in a smart way.
  * Coordinates movements with ranged DPS bots.
+ *
+ * Note that when using thrusters with zapper, damage is dealt every time the
+ * bot moves. So effective DPS can be twice as high (!!) as with normal zapper.
  */
 const update = function() {
     // Equip when we see someone, not blindly
