@@ -63,6 +63,7 @@ const update = function() {
             SORT_BY_DISTANCE,
             SORT_ASCENDING
         );
+        // TODO: even around the CPU we need to be moving to increase DPS.
         if (exists(enemyCpu)) tryActivateSensors();
         if (isAttacker) figureItOut();
         else defaultMove();
@@ -70,12 +71,52 @@ const update = function() {
 
     // At this point we know there is an enemy bot nearby.
     setEnemySeen(closestEnemyBot);
+    const enemyBotDistance = getDistanceTo(closestEnemyBot);
+
+    // The one rule of chaos zapping is ALWAYS BE MOVING. This is what allows
+    // thrusters to put out the DPS.
 
     // Avoid lasers if we are unprotected; otherwise, welcome them!
     if (!isReflecting() && !isCloaked()) simpleEvadeLasers(closestEnemyBot);
 
+    // For the reflecting non-thrusted zapper with mee, we can try charging
     tryMeleeSmart();
-    moveTo(closestEnemy);
+
+    // Do anything that moves. If we're not next to them move closer.
+    if (enemyBotDistance > 1) moveTo(closestEnemy);
+
+    // Otherwise we're right next to the enemy. So based on whereever they are,
+    // move toward the side with MORE people. We don't even need to go backward
+    // because that would not deal damage.
+
+    // TODO: check all the positions for enemies and go to the one with more
+    // enemies.
+
+    // Case 1: they are on top/bottom case
+    if (x == closestEnemyBot.x) {
+        const leftX = x - 1;
+        const rightX = x + 1;
+        const leftValid = isValidXPos(leftX) && !exists(getEntityAt(leftX, y));
+        const rightValid =
+            isValidXPos(rightX) && !exists(getEntityAt(rightX, y));
+        if (leftValid && rightValid) {
+            if (percentChance(50)) moveTo(leftX, y);
+            else moveTo(rightX, y);
+        } else if (leftValid) moveTo(leftX, y);
+        else if (rightValid) moveTo(rightX, y);
+    }
+    // Case 2: they are on left/right
+    else if (y == closestEnemyBot.y) {
+        const topY = y - 1;
+        const botY = y + 1;
+        const topValid = isValidYPos(topY) && !exists(getEntityAt(x, topY));
+        const botValid = isValidYPos(botY) && !exists(getEntityAt(x, botY));
+        if (topValid && botValid) {
+            if (percentChance(50)) moveTo(x, topY);
+            else moveTo(x, botY);
+        } else if (topValid) moveTo(x, topY);
+        else if (botValid) moveTo(x, botY);
+    }
 
     if (willMeleeHit()) melee();
     defaultMove();
