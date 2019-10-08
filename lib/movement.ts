@@ -63,6 +63,8 @@ const defaultMove = function() {
  * this centroid the more they will be likely to move toward it.
  */
 const attackerUpdateLocation = function(xCoord: number, yCoord: number): void {
+    if (!isAttacker) return;
+
     // First turn update
     if (!exists(sharedA)) {
         sharedA = xCoord;

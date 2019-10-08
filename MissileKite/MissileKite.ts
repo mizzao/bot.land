@@ -94,16 +94,15 @@ const update = function() {
     // Heuristic: on defense don't evade lasers, just let the tanks do that.
     // Mine layers don't evade lasers, you want them to come follow in.
     if (!canLayMine() && numFriendlyBots < 5)
-        tryEvadeLasers(closestEnemyBot, numEnemyBots);
+        tryEvadeLasers(closestEnemyBot, numEnemyBots, 4);
 
-    // Protect against missiles/lasers if we have reflection
+    // Protect against missiles/lasers if we have reflection. Note: protect
+    // first before we try to evade, otherwise we end up doing a lot of evasion
+    // without shield and sometimes that gets messy.
     if (enemyBotDistance < 5.1) {
         tryReflect();
-        if (!isShielded()) {
-            tryShieldSelf();
-        } else {
-            tryShieldFriendlyBots(4);
-        }
+        if (!isShielded()) tryShieldSelf();
+        else tryShieldFriendlyBots(4);
     }
 
     // Mine layers should not do it from too far, so they have time to lay mine
@@ -111,20 +110,23 @@ const update = function() {
     // When close: not every time, as this can cause us to slow down too much.
     if (enemyBotDistance < 3.1 && percentChance(30)) tryLayMine();
 
+    // Heuristic: on defense when there are lots of allies, don't evade lasers,
+    // just let the tanks do that. We attack with up to 5 bots so this is a
+    // decent heuristic.
+    if (numFriendlyBots < 6) tryEvadeLasers(closestEnemyBot, numEnemyBots, 4);
+
     // Prefer to be farther but shoot from closer when we have advantage
     // Farther is better to avoid zappers / inferno zappers, but does less damage
     // > 3 also avoids Level 2 and lower missiles, so we can kite those.
     // At least on bigger maps.
 
     let evadeThreshold = 3.1;
-    // Under some conditions shoot from closer to get more shots:
-    // - only one enemy bot (especially if there are more of us)
-    // - we're getting backed into the wall (often ends up running around)
-    //
-    // TODO update for attackers & defenders
-    // TODO defenders should always shoot if friendly bots >= 5, cuz DPS...don't run.
-    // TODO evading at 2 can still be bad because damage from zappers
-    if (numEnemyBots <= 1 || x <= 2) evadeThreshold = 2.9;
+    // Previously we'd evade less if there was only 1 enemy bot, but this was
+    // pretty vulnerable to zappers, taking damage when we shouldn't. For now
+    // only evade less when we are backed into the wall.
+
+    // Defenders should use lower threshold if friendly bots >= 5; probably tanks in front
+    if (x <= 2 || (!isAttacker && numFriendlyBots >= 5)) evadeThreshold = 2.9;
 
     if (enemyBotDistance < evadeThreshold) {
         if (percentChance(25)) tryLayMine();

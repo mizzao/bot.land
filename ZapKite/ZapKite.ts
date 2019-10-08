@@ -68,7 +68,7 @@ const update = function() {
     const numFriendlyBots = size(allFriendlyBots);
 
     // Avoid walking down a street with lasers
-    tryEvadeLasers(closestEnemyBot, numEnemyBots);
+    tryEvadeLasers(closestEnemyBot, numEnemyBots, 2);
 
     // Protect against missiles/lasers if we have reflection
     if (enemyBotDistance < 5.1) {
