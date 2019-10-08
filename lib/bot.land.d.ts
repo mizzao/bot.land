@@ -40,7 +40,7 @@ declare type Direction =
 // Terminators
 
 // Functions
-declare function debugLog(msg: string): void;
+declare function debugLog(stuff: any): void;
 declare function exists(entity?: Entity): boolean;
 
 declare function findEntities(
@@ -106,8 +106,10 @@ declare function canActivateSensors(): boolean;
 declare function areSensorsActivated(): boolean;
 declare function cloak(): void;
 declare function canCloak(): boolean;
+declare function isCloaked(): boolean;
 declare function reflect(): void;
 declare function canReflect(): boolean;
+declare function isReflecting(): boolean;
 declare function shield(entity?: Entity): void;
 declare function canShield(entity?: Entity): boolean;
 declare function isShielded(entity?: Entity): boolean;

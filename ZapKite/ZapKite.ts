@@ -1,14 +1,38 @@
 /**
- * Zapper micro: a commando bot that tries to draw away individual melee units
- * and then slit their throats.
+ * The chaos zapper: a truly ridiculous unit.
  *
  * Suggested loadout:
- * - zapper 2 (or inferno zapper!?)
- * - thrusters 2
- * - regen 2
- * - melee 1
+ * - zapper 3 (or inferno zapper!?)
+ * - reflect 3 or thrusters 3
+ * - cloak 1
+ *
+ * It basically works like this:
+ * Turn 0: cloak
+ * Turn 2: reflect (cloak ends)
+ * Turn 3: zap
+ * Turn 8: (reflect ends)
+ * Turn 9: cloak (zap ends)
+ * Rinse and repeat.
  */
 const update = function() {
+    // The first thing of chaos zapping is to never disrupt the cycle. Always
+    // get the counter and increment it before doing anything else.
+    const CYCLEN = 9;
+    let counter = getData();
+    if (!exists(counter)) counter = 0; // First turn
+    saveData((counter + 1) % CYCLEN);
+
+    // This works because zap, cloak, and reflect have the same CD.
+    // TODO: recover from situations like when we get EMPed.
+    if (counter % CYCLEN == 0) {
+        tryCloak();
+    } else if (counter % CYCLEN == 2) {
+        tryReflect();
+    } else if (counter % CYCLEN == 3) {
+        tryZap();
+    }
+    // Once that's out of the way, we can do other stuff.
+
     // Do we see anything nearby?
     const closestEnemy = findEntity(
         ENEMY,
@@ -17,7 +41,7 @@ const update = function() {
         SORT_ASCENDING
     );
     if (!exists(closestEnemy)) {
-        if (canActivateSensors()) activateSensors();
+        tryActivateSensors();
         if (isAttacker) figureItOut();
         else defaultMove();
     }
@@ -39,20 +63,7 @@ const update = function() {
             SORT_BY_DISTANCE,
             SORT_ASCENDING
         );
-        if (exists(enemyCpu) && canActivateSensors()) activateSensors();
-
-        const enemyChip = findEntity(
-            ENEMY,
-            CHIP,
-            SORT_BY_DISTANCE,
-            SORT_ASCENDING
-        );
-        if (!exists(enemyChip) && !exists(enemyCpu) && lifePercent < 80) {
-            // If we don't see anyone, just wait around for some regen
-            // TODO check for regen? If the bot has no regen we will just sit around
-            if (canMove("backward")) move("backward");
-        }
-
+        if (exists(enemyCpu)) tryActivateSensors();
         if (isAttacker) figureItOut();
         else defaultMove();
     }
@@ -60,56 +71,38 @@ const update = function() {
     // At this point we know there is an enemy bot nearby.
     setEnemySeen(closestEnemyBot);
 
-    const allEnemyBots = findEntities(ENEMY, BOT, false);
-    const numEnemyBots = size(allEnemyBots);
-    const enemyBotDistance = getDistanceTo(closestEnemyBot);
-
-    const allFriendlyBots = findEntities(IS_OWNED_BY_ME, BOT, true);
-    const numFriendlyBots = size(allFriendlyBots);
-
-    // Avoid walking down a street with lasers
-    tryEvadeLasers(closestEnemyBot, numEnemyBots);
-
-    // Protect against missiles/lasers if we have reflection
-    if (enemyBotDistance < 5.1) {
-        tryReflect();
-        tryShieldSelf();
-    }
-
-    // We're going to be closing in shortly, so activate zap.
-    // 1 turn to activate + 1 turn of enemies coming in -> in range.
-    if (enemyBotDistance < 2.5) {
-        tryZap();
-    }
-
-    // If one bot and enough health or outnumbering, attack.
-    if (numEnemyBots == 1) {
-        if (lifePercent > 60 || (numFriendlyBots >= 2 && lifePercent > 30)) {
-            tryZap();
-            tryMeleeSmart();
-            moveTo(closestEnemy);
-        }
-    }
-
-    // If we're cornered, attack.
-    const distToBack = x;
-    const distToSide = min(y, arenaHeight - 1 - y);
-    if (distToBack + distToSide <= 2) {
-        tryZap();
-        tryMeleeSmart();
-    }
-
-    // Otherwise we should try to evade.
-    tryEvadeEnemy(closestEnemy, numEnemyBots);
-
-    // Here we have seen enemy bots, but not enough for the evade conditions above.
-    tryShieldSelf();
-    tryReflect();
-    tryCloak();
+    // Avoid lasers if we are unprotected; otherwise, welcome them!
+    if (!isReflecting() && !isCloaked()) simpleEvadeLasers(closestEnemyBot);
 
     tryMeleeSmart();
+    moveTo(closestEnemy);
 
+    if (willMeleeHit()) melee();
     defaultMove();
+};
+
+const simpleEvadeLasers = function(closestEnemyBot: Entity) {
+    const enemyBotDistance = getDistanceTo(closestEnemyBot);
+    if (enemyBotDistance < 2) return;
+    // Don't stand in range of lasers
+    if (x == closestEnemyBot.x) {
+        // With missile micro we could bounce back and forth, but that's what we want here!
+        if (canMove("backward") && canMove("forward")) {
+            if (percentChance(50)) move("backward");
+            move("forward");
+        }
+        if (canMove("backward")) move("backward");
+        if (canMove("forward")) move("forward");
+    }
+    if (y == closestEnemyBot.y) {
+        // Move up or down randomly if both directions are available
+        if (canMove("up") && canMove("down")) {
+            if (percentChance(50)) move("up");
+            move("down");
+        }
+        if (canMove("up")) move("up");
+        if (canMove("down")) move("down");
+    }
 };
 
 const isValidXPos = function(xCoord: number): boolean {

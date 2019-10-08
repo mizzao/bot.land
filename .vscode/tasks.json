@@ -20,10 +20,7 @@
                 "s/var //g",
                 "MissileKite/bot.js"
             ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
+            "group": "build",
             "dependsOn": [
                 "MissileKite compile"
             ],
@@ -47,7 +44,10 @@
                 "s/var //g",
                 "ZapKite/bot.js"
             ],
-            "group": "build",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
             "dependsOn": [
                 "ZapKite compile"
             ],

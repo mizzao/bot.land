@@ -56,6 +56,10 @@ const defaultMove = function() {
  * to the enemy's location.
  */
 const setEnemySeen = function(enemy: Entity): void {
+    // This is currently not used for attackers, and we don't want to bludgeon
+    // the shared variables.
+    if (isAttacker) return;
+
     // There are 5 shared variables, A-E.
     // - shared(A,B): location of one last seen enemy
     // - shared(C,D): location of second last seen enemy, that is not close to
