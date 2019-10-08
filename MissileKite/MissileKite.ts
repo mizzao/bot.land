@@ -38,6 +38,9 @@ const update = function() {
         SORT_ASCENDING
     );
     if (!exists(closestEnemy)) {
+        // Missile micro bot usually has shield 1, which has range 3. But
+        // sometimes we'll put shield 2 on it with lower thrusters.
+        tryShieldFriendlyBots(4);
         if (canActivateSensors()) activateSensors();
         if (isAttacker) figureItOut();
         else defaultMove();
@@ -60,10 +63,7 @@ const update = function() {
             SORT_BY_DISTANCE,
             SORT_ASCENDING
         );
-        // Missile micro bot usually has shield 1, which has range 3. But
-        // sometimes we'll put shield 2 on it with lower thrusters.
         tryShieldFriendlyBots(4);
-
         if (exists(enemyCpu) && canActivateSensors()) activateSensors();
         if (isAttacker) figureItOut();
         else defaultMove();
