@@ -2,12 +2,11 @@
   "compilerOptions": {
     "target": "es3",
     "module": "none",
-    "removeComments": true,
     "sourceMap": false,
-    "outFile": "../build/MissileKite.js"
+    "outFile": "../build/ArtilleryMicro.js"
   },
   "files": [
-    "MissileKite.ts"
+    "ArtilleryMicro.ts"
   ],
   "include": [
     "../lib/**/*"

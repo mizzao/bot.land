@@ -18,7 +18,7 @@
             "args": [
                 "-i",
                 "s/var //g",
-                "MissileKite/bot.js"
+                "build/MissileKite.js"
             ],
             "group": "build",
             "dependsOn": [
@@ -42,7 +42,7 @@
             "args": [
                 "-i",
                 "s/var //g",
-                "ZapKite/bot.js"
+                "build/ZapKite.js"
             ],
             "group": {
                 "kind": "build",
@@ -69,7 +69,31 @@
             "args": [
                 "-i",
                 "s/var //g",
-                "SmartMelee/bot.js"
+                "build/SmartMelee.js"
+            ],
+            "group": "build",
+            "dependsOn": [
+                "SmartMelee compile"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "ArtilleryMicro compile",
+            "type": "typescript",
+            "tsconfig": "ArtilleryMicro/tsconfig.json",
+            "problemMatcher": [
+                "$tsc"
+            ],
+            "group": "build"
+        },
+        {
+            "label": "ArtilleryMicro output",
+            "type": "shell",
+            "command": "sed",
+            "args": [
+                "-i",
+                "s/var //g",
+                "build/ArtilleryMicro.js"
             ],
             "group": "build",
             "dependsOn": [

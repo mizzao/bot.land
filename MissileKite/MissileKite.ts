@@ -18,6 +18,9 @@
  * high reflect and no thrusters (it saves 1 reflection).
  */
 const update = function() {
+    // Update our location for the team average
+    attackerUpdateLocation(x, y);
+
     const state = getData();
     if (!exists(state)) {
         // Need to save in case we reach a terminator
