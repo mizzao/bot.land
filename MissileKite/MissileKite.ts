@@ -18,19 +18,13 @@
  * high reflect and no thrusters (it saves 1 reflection).
  */
 const update = function() {
-    // If it's the first round of the game, take a shot before anyone turns on
-    // reflection. This is especially advantageous for defenders who seem to get
-    // their turns first before attackers.
-    //
-    // TODO: this is janky because it depends on number of bots we have in the arena.
-    let potshotThreshold = 5;
-    if (isAttacker) potshotThreshold = 4;
-    if (!exists(sharedE) || sharedE < potshotThreshold) {
-        if (!exists(sharedE)) sharedE = 1;
-        else sharedE = sharedE + 1;
+    const state = getData();
+    if (!exists(state)) {
+        // Need to save in case we reach a terminator
+        saveData("first turn done");
         // As defender, try to cast shield on anyone nearby
         if (!isAttacker && canShield()) {
-            debugLog("Casting first turn defender shield");
+            debugLog("Casting defender first turn shield");
             shieldTanks();
         }
         // If first turn of the game, take a shot before anyone turns on

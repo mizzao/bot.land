@@ -60,43 +60,81 @@ const setEnemySeen = function(enemy: Entity): void {
     // the shared variables.
     if (isAttacker) return;
 
-    // There are 5 shared variables, A-E.
-    // - shared(A,B): location of one last seen enemy
-    // - shared(C,D): location of second last seen enemy, that is not close to
-    //   the first.
-    //
-    // Attack order: first enemy, second enemy (not close to first), finally
-    // cpu.
+    // We store 2 locations (see README). Bots attack to whichever location is
+    // closest to them, until cleared. Note that we are forced to use these
+    // weird array1 and array2 variables to index into arrays.
 
     // Record 1st location if we don't already have one.
-    if (!exists(sharedA)) {
-        sharedA = enemy.x;
-        sharedB = enemy.y;
+    loadArr1Loc1();
+    if (size(array1) == 0) {
+        array1 = [];
+        array1[0] = enemy.x;
+        array1[1] = enemy.y;
+        saveArr1Loc1();
         return;
     }
-    const locOneDiff = abs(enemy.x - sharedA) + abs(enemy.y - sharedB);
+    const locOneDiff = abs(enemy.x - array1[0]) + abs(enemy.y - array1[1]);
     // If it's sufficiently close, count it as the same "area" and just
     // update.
     if (locOneDiff < 6) {
-        sharedA = enemy.x;
-        sharedB = enemy.y;
+        array1 = [];
+        array1[0] = enemy.x;
+        array1[1] = enemy.y;
+        saveArr1Loc1();
         return;
     }
 
     // This seems like a different location. Do we have something recorded for location 2?
-    if (!exists(sharedC)) {
-        sharedC = enemy.x;
-        sharedD = enemy.y;
+    loadArr2Loc2();
+    if (size(array2) == 0) {
+        array2 = [];
+        array2[0] = enemy.x;
+        array2[1] = enemy.y;
+        saveArr2Loc2();
         return;
     }
-    const locTwoDiff = abs(enemy.x - sharedC) + abs(enemy.y - sharedD);
+    const locTwoDiff = abs(enemy.x - array2[0]) + abs(enemy.y - array2[1]);
     if (locTwoDiff < 8) {
-        sharedC = enemy.x;
-        sharedD = enemy.y;
+        array2 = [];
+        array2[0] = enemy.x;
+        array2[1] = enemy.y;
+        saveArr2Loc2();
         return;
     }
 
     // Shouldn't get here, but if so you're on your own...
+};
+
+// We'll just use array1 and array2 when working with the two locations so that
+// there is no hope of confusing them. Note that crazy stuff can happen here
+// since these variables can be overwritten in function calls.
+const saveArr1Loc1 = function() {
+    debugLog("enemy target 1 set at (" + array1[0] + "," + array1[1] + ")");
+    sharedA = array1;
+};
+const saveArr2Loc2 = function() {
+    debugLog("enemy target 2 set at (" + array2[0] + "," + array2[1] + ")");
+    sharedB = array2;
+};
+// We cannot set an array to undefined, that causes a bug. So return empty array
+// instead.
+const loadArr1Loc1 = function() {
+    if (!exists(sharedA)) array1 = [];
+    else array1 = sharedA;
+};
+const loadArr2Loc2 = function() {
+    if (!exists(sharedB)) array2 = [];
+    else array2 = sharedB;
+};
+const clearLoc1 = function(): void {
+    debugLog("enemy target 1 clear");
+    array1 = [];
+    sharedA = array1;
+};
+const clearLoc2 = function(): void {
+    debugLog("enemy target 2 clear");
+    array2 = [];
+    sharedB = array2;
 };
 
 /**
@@ -108,60 +146,58 @@ const defenderMove = function(): void {
     const cpuX = arenaWidth - 2;
     const cpuY = floor(arenaHeight / 2);
 
+    loadArr1Loc1();
+    loadArr2Loc2();
     // If we're all balled up near the CPU, there's enough of us, and no one sees any
     // enemies, go out and investigate the chips and see if they're okay.
     if (
-        !exists(sharedA) &&
-        !exists(sharedC) &&
+        size(array1) == 0 &&
+        size(array2) == 0 &&
         getDistanceTo(cpuX, cpuY) <= 1
     ) {
         const allFriends = findEntitiesInRange(IS_OWNED_BY_ME, BOT, true, 3);
         const numFriends = size(allFriends);
         if (numFriends >= 6) {
             // XXX These are the locations of my chips in the level 3 defense
-            sharedA = cpuX - 4;
-            sharedB = cpuY - 3;
-            sharedC = cpuX - 4;
-            sharedD = cpuY + 3;
+            array1 = [];
+            array1[0] = cpuX - 4;
+            array1[1] = cpuY - 3;
+            saveArr1Loc1();
+            array2 = [];
+            array2[0] = cpuX - 4;
+            array2[1] = cpuY + 3;
+            saveArr2Loc2();
         }
     }
 
     // Check if we're close to either of the known enemy locations, and if we
     // don't see anyone there (with sensors) clear it.
-    if (exists(sharedA)) {
-        if (getDistanceTo(sharedA, sharedB) <= 1) {
-            tryActivateSensors();
-            if (areSensorsActivated()) {
-                sharedA = undefined;
-                sharedB = undefined;
-            }
-        }
+
+    if (size(array1) > 0 && getDistanceTo(array1[0], array1[1]) <= 1) {
+        tryActivateSensors();
+        if (areSensorsActivated()) clearLoc1();
     }
-    if (exists(sharedC)) {
-        if (getDistanceTo(sharedC, sharedD) <= 1) {
-            tryActivateSensors();
-            if (areSensorsActivated()) {
-                sharedC = undefined;
-                sharedD = undefined;
-            }
-        }
+    if (size(array2) > 0 && getDistanceTo(array2[0], array2[1]) <= 1) {
+        tryActivateSensors();
+        if (areSensorsActivated()) clearLoc2();
     }
 
-    if (!exists(sharedA) && !exists(sharedC)) {
+    // Figure out where we're moving.
+    if (size(array1) == 0 && size(array2) == 0) {
         moveTo(cpuX, cpuY);
     }
-    if (exists(sharedA) && !exists(sharedC)) {
-        moveTo(sharedA, sharedB);
+    if (size(array1) > 0 && size(array2) == 0) {
+        moveTo(array1[0], array1[1]);
     }
-    if (exists(sharedC) && !exists(sharedA)) {
-        moveTo(sharedC, sharedD);
+    if (size(array2) > 0 && size(array1) == 0) {
+        moveTo(array2[0], array2[1]);
     }
 
     // Both locations exist, attack to the closest one.
-    const dist1 = getDistanceTo(sharedA, sharedB);
-    const dist2 = getDistanceTo(sharedC, sharedD);
+    const dist1 = getDistanceTo(array1[0], array1[1]);
+    const dist2 = getDistanceTo(array2[0], array2[1]);
 
-    if (dist1 == dist2 && percentChance(50)) moveTo(sharedA, sharedB);
-    else if (dist1 < dist2) moveTo(sharedA, sharedB);
-    else moveTo(sharedC, sharedD);
+    if (dist1 == dist2 && percentChance(50)) moveTo(array1[0], array1[1]);
+    else if (dist1 < dist2) moveTo(array1[0], array1[1]);
+    else moveTo(array2[0], array2[1]);
 };

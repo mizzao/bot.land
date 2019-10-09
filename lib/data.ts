@@ -41,9 +41,8 @@ const saveData = function(datum): void {
     array1[i] = datum;
     array2[i] = me;
     debugLog("Saved " + datum + " for " + me);
-    debugLog(i);
-    debugLog(array1);
     debugLog(array2);
+    debugLog(array1);
     sharedD = array1;
     sharedE = array2;
 };
@@ -54,8 +53,12 @@ const getData = function(): any {
 
     const me = getEntityAt(x, y);
     // Load arrays
+    debugLog("array1 before data load", array1);
+    debugLog("array2 before data load", array2);
     array1 = sharedD;
     array2 = sharedE;
+    debugLog("array1 after data load", array1);
+    debugLog("array2 after data load", array2);
 
     let i = 0;
     for (i = 0; i < size(array2); i++) {

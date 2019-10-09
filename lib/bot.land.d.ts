@@ -40,8 +40,8 @@ declare type Direction =
 // Terminators
 
 // Functions
-declare function debugLog(stuff: any): void;
-declare function exists(entity?: Entity): boolean;
+declare function debugLog(...stuff: any[]): void;
+declare function exists(thing: any): boolean;
 
 declare function findEntities(
     friendlyOrEnemy: EntityMatchFlags,
@@ -63,8 +63,8 @@ declare function findEntity(
 declare function getEntityAt(x: number, y: number): Entity;
 declare function figureItOut(): void;
 
-declare let array1: Entity[];
-declare let array2: Entity[];
+declare let array1: any[];
+declare let array2: any[];
 
 // Functions - Math
 declare function abs(n: number): number;
