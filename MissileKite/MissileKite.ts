@@ -28,6 +28,14 @@ const update = function() {
     if (!exists(sharedE) || sharedE < potshotThreshold) {
         if (!exists(sharedE)) sharedE = 1;
         else sharedE = sharedE + 1;
+        // As defender, try to cast shield on anyone nearby
+        if (!isAttacker && canShield()) {
+            debugLog("Casting first turn defender shield");
+            shieldTanks();
+        }
+        // If first turn of the game, take a shot before anyone turns on
+        // reflection. This is especially advantageous for defenders who seem to
+        // get their turns first before attackers (if not shielding above).
         tryFireMissiles();
     }
 
@@ -112,6 +120,7 @@ const update = function() {
     //
     // TODO update for attackers & defenders
     // TODO defenders should always shoot if friendly bots >= 5, cuz DPS...don't run.
+    // TODO evading at 2 can still be bad because damage from zappers
     if (numEnemyBots <= 1 || x <= 2) evadeThreshold = 2.9;
 
     if (enemyBotDistance < evadeThreshold) {
@@ -141,4 +150,29 @@ const update = function() {
     tryFireMissiles();
 
     defaultMove();
+};
+
+const shieldTanks = function() {
+    // This is a hack but covers the current defense scenario. First, try to
+    // cast shield on an entity immediately up to 3 cells in front of us.
+    let i = 1;
+    // Look for friends on same row
+    for (i = 1; i <= 3; i++) {
+        const maybeFriend = getEntityAt(x - i, y);
+        if (exists(maybeFriend)) tryShieldFriend(maybeFriend);
+    }
+    // Look for friends on row above
+    for (i = 1; i <= 3; i++) {
+        const maybeFriend = getEntityAt(x - i, y - 1);
+        if (exists(maybeFriend)) tryShieldFriend(maybeFriend);
+    }
+    // And row below
+    for (i = 1; i <= 3; i++) {
+        const maybeFriend = getEntityAt(x - i, y + 1);
+        if (exists(maybeFriend)) tryShieldFriend(maybeFriend);
+    }
+    // If none of that worked, just shield whoever's closest
+    tryShieldFriend(
+        findEntity(IS_OWNED_BY_ME, BOT, SORT_BY_DISTANCE, SORT_ASCENDING)
+    );
 };
