@@ -49,6 +49,11 @@ const tryEvadeEnemy = function(closestEnemyBot: Entity, numEnemyBots: number) {
     // Prefer going backward to going forward, which can get us stuck.
     // TODO don't always run down from top left
     if (canMove("backward") && x <= closestEnemyBot.x) {
+        // Do occasional diagonal moves to get people to eat mines
+        if (y < closestEnemyBot.y && canMove("up") && percentChance(30))
+            move("up");
+        if (y > closestEnemyBot.y && canMove("down") && percentChance(30))
+            move("down");
         move("backward");
     }
     // TODO we should move backward when there's one bot too

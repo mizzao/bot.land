@@ -92,6 +92,9 @@ const attackerUpdateLocation = function(xCoord: number, yCoord: number): void {
  * @param enemy
  */
 const setEnemySeen = function(enemy: Entity): void {
+    // This is only used for defenders, avoid clobbering the code above.
+    if (isAttacker) return;
+
     // There are 5 shared variables, A-E.
     // - shared(A,B): location of one last seen enemy
     // - shared(C,D): location of second last seen enemy, that is not close to
