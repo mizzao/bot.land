@@ -92,8 +92,8 @@ const attackerUpdateLocation = function(xCoord: number, yCoord: number): void {
  * @param enemy
  */
 const setEnemySeen = function(enemy: Entity): void {
-    // This is currently not used for attackers, and we don't want to bludgeon
-    // the shared variables.
+    // This is only used for defenders, at the moment, so avoid clobbering the
+    // shared variables that are currently used by attackers.
     if (isAttacker) return;
 
     // We store 2 locations (see README). Bots attack to whichever location is
