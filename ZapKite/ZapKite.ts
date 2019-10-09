@@ -27,7 +27,9 @@ const update = function() {
     if (counter % CYCLEN == 0) {
         tryCloak();
     } else if (counter % CYCLEN == 2) {
+        // If we have defensive measures try activating before uncloak
         tryReflect();
+        tryShieldSelf();
     } else if (counter % CYCLEN == 3) {
         tryZap();
     }
@@ -83,7 +85,7 @@ const update = function() {
     tryMeleeSmart();
 
     // Do anything that moves. If we're not next to them move closer.
-    if (enemyBotDistance > 1) moveTo(closestEnemy);
+    if (enemyBotDistance > 1) moveTo(closestEnemyBot);
 
     // Otherwise we're right next to the enemy. So based on whereever they are,
     // move toward the side with MORE people. We don't even need to go backward
@@ -118,7 +120,6 @@ const update = function() {
         else if (botValid) moveTo(x, botY);
     }
 
-    if (willMeleeHit()) melee();
     defaultMove();
 };
 
