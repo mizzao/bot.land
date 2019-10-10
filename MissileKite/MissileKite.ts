@@ -99,10 +99,11 @@ const update = function() {
         else tryShieldFriendlyBots(4);
     }
 
-    // Mine layers should not do it from too far, so they have time to lay mine
-    if (enemyBotDistance < 4.1) tryLayMine();
-    // When close: not every time, as this can cause us to slow down too much.
-    if (enemyBotDistance < 3.1 && percentChance(30)) tryLayMine();
+    // Because mine laying is always available, we have to control how
+    // aggressively it happens, so we don't get bogged down.
+    if (enemyBotDistance == 5) tryLayMine();
+    else if (enemyBotDistance == 4 && percentChance(70)) tryLayMine();
+    else if (enemyBotDistance == 3 && percentChance(40)) tryLayMine();
 
     // Heuristic: on defense when there are lots of allies, don't evade lasers,
     // just let the tanks do that. We attack with up to 5 bots so this is a

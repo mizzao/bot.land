@@ -31,7 +31,9 @@ const update = function() {
             if (AGGRESSIVE) figureItOut();
             // But this is useful for dealing with other artillery
             else if (areSensorsActivated()) figureItOut();
-            else return;
+            // This is important to stop artillery from being effin slow
+            else if (!canLayMine()) figureItOut();
+            else tryLayMine();
         } else {
             defenderMove(true);
         }
@@ -49,7 +51,8 @@ const update = function() {
         if (isAttacker) {
             if (AGGRESSIVE) figureItOut();
             else if (areSensorsActivated()) figureItOut();
-            else return;
+            else if (!canLayMine()) figureItOut();
+            else tryLayMine();
         } else {
             defenderMove(true);
         }
@@ -97,9 +100,15 @@ const update = function() {
     // There's an enemy nearby but we can't attack it, or there are too many.
     // Artillery has min range 5, max range 7
     if (enemyBotDistance < evadeThreshold) {
-        tryLayMine();
+        // This is reversed from missiles. Because artillery has no short range it
+        // should definitely mine when enemies get close.
+        if (enemyBotDistance < 3.1 && percentChance(80)) tryLayMine();
+        else if (enemyBotDistance <= 4.1 && percentChance(50)) tryLayMine();
+
         // Try evasive maneuvers
         tryEvadeEnemy(closestEnemyBot, numEnemyBots);
+        // Can't evade, just mine
+        tryLayMine();
     }
 
     tryFireArtillery();
