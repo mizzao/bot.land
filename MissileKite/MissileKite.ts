@@ -18,8 +18,8 @@
  * high reflect and no thrusters (it saves 1 reflection).
  */
 const update = function() {
-    // Update our location for the team average
-    attackerUpdateLocation(x, y);
+    const TEAM_MIN_DIST = 2.5;
+    const TEAM_MAX_DIST = 6.5;
 
     const state = getData();
     if (!exists(state)) {
@@ -35,6 +35,11 @@ const update = function() {
         // get their turns first before attackers (if not shielding above).
         tryFireMissiles();
     }
+
+    // Update our location for the team average
+    attackerUpdateLocation(x, y);
+    // We want to give bots room to maneuver but not go too far away
+    checkTeamCentroidMove(TEAM_MIN_DIST, TEAM_MAX_DIST);
 
     // Do we see anything nearby?
     const closestEnemy = findEntity(

@@ -72,6 +72,7 @@ declare function floor(n: number): number;
 declare function max(...nums: number[]): number;
 declare function min(...nums: number[]): number;
 declare function percentChance(chance: number): boolean;
+declare function round(n: number): number;
 declare function size(arr: any[]): number;
 
 // Functions - Movement

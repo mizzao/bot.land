@@ -69,6 +69,23 @@ const defaultMove = function(isArtillery?: boolean) {
  */
 const attackerUpdateLocation = function(xCoord: number, yCoord: number): void {
     if (!isAttacker) return;
+    // All bots update a shared counter, so by looking at it since our last turn
+    // we know how many bots are alive, hence the weight to update the EWMA.
+
+    // Increment the shared counter. 4 is a reasonable starting weight because
+    // that's how many bots we often have.
+    const DEFAULT_STARTING_BOTS = 4;
+    if (!exists(sharedC)) sharedC = DEFAULT_STARTING_BOTS - 1;
+    sharedC = sharedC + 1;
+
+    let myCounter = getData();
+    if (!isNumber(myCounter)) myCounter = sharedC - DEFAULT_STARTING_BOTS;
+    saveData(sharedC);
+
+    // TODO bots seem to be updated in a random order. But that's okay, if it
+    // nets out to the right average.
+    const numFriendsAlive = sharedC - myCounter;
+    debugLog("I see " + numFriendsAlive + " friends alive");
 
     // First turn update
     if (!exists(sharedA)) {
@@ -77,13 +94,35 @@ const attackerUpdateLocation = function(xCoord: number, yCoord: number): void {
         return;
     }
 
-    const alpha = 0.3;
-    // This is a weird EWMA, because we don't know the number of bots (as they
-    // die). With many bots it needs to be low enough that the average doesn't
-    // jump around a lot, but with a single bot it needs to be high enough that
-    // the bot can move around without impeding itself too much.
+    const alpha = 1.0 / numFriendsAlive;
     sharedA = xCoord * alpha + sharedA * (1 - alpha);
     sharedB = yCoord * alpha + sharedB * (1 - alpha);
+};
+
+const checkTeamCentroidMove = function(minDist: number, maxDist: number) {
+    // Distances in bot land are manhattan distance
+    const distToCentroid = abs(x - sharedA) + abs(y - sharedB);
+
+    debugLog(
+        "My ",
+        x,
+        y,
+        " is ",
+        distToCentroid,
+        " from the center",
+        sharedA,
+        sharedB
+    );
+    debugLog("Limits: ", minDist, maxDist);
+
+    // If within minDist of centroid it's good. Beyond maxDist of centroid 100%
+    // move toward centroid. Linear in between.
+    const forceMoveProbability =
+        (distToCentroid - minDist) / (maxDist - minDist);
+    const forceMoveChance = min(100, max(0, 100 * forceMoveProbability));
+    debugLog("Moving to centroid with probability", forceMoveChance);
+
+    if (percentChance(forceMoveChance)) moveTo(round(sharedA), round(sharedB));
 };
 
 /**

@@ -7,8 +7,12 @@
 const update = function() {
     // Controls whether artillery attack without sensors
     const AGGRESSIVE = false;
+    // Controls EWMA limits: these can be a bit higher than for missiles
+    const TEAM_MIN_DIST = 3.5;
+    const TEAM_MAX_DIST = 7;
 
     attackerUpdateLocation(x, y);
+    checkTeamCentroidMove(TEAM_MIN_DIST, TEAM_MAX_DIST);
 
     // TODO artillery potshot? It's less important because it probably won't
     // hit anything.
@@ -82,11 +86,14 @@ const update = function() {
 
     // Not in melee range...can we shoot something if there aren't too many enemies around?
     // TODO add shared variable for retreating
-    // TODO: if other artillery in range, don't stand still
-    // TODO bug: will keep shooting at far enemy even if getting attacked by close enemy
+    // TODO: if other artillery in range, don't stand still, zig zag
+
     // TODO only for attacker do we count the bots here
-    // Shoot if we see less than 2 enemies, or we're defending with buddies
-    if (numEnemyBots <= 2 || (!isAttacker && numFriendlyBots >= 5)) {
+
+    // Need <= 1 or will keep shooting at far enemy even if getting attacked by
+    // close enemy, and its better to mine. Can shoot if we're defending with
+    // buddies
+    if (numEnemyBots <= 1 || (!isAttacker && numFriendlyBots >= 5)) {
         tryFireArtillery();
     }
     // I think we can ignore all the above and always shoot, cause landmines
