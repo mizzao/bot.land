@@ -4,10 +4,10 @@
     "module": "none",
     "removeComments": true,
     "sourceMap": false,
-    "outFile": "../build/MissileKite.js"
+    "outFile": "../build/AggroMiner.js"
   },
   "files": [
-    "MissileKite.ts"
+    "AggroMiner.ts"
   ],
   "include": [
     "../lib/**/*"

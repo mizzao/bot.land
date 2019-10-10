@@ -3,8 +3,10 @@
  * use this in place of figureItOut() to avoid unwanted premature utility
  * activations. Assumes the script will generally deal with enemies if they get
  * in range.
+ *
+ * @param isArtillery if artillery, will not move <5 units from target.
  */
-const defaultMove = function() {
+const defaultMove = function(isArtillery?: boolean) {
     // React to enemy structures
     const closestEnemyChip = findEntity(
         ENEMY,
@@ -24,7 +26,9 @@ const defaultMove = function() {
         SORT_ASCENDING
     );
     if (exists(closestEnemyBot)) {
-        if (canMoveTo(closestEnemyBot) && getDistanceTo(closestEnemyBot) > 1) {
+        const dist = getDistanceTo(closestEnemyBot);
+        if (canMoveTo(closestEnemyBot) && dist > 1) {
+            if (isArtillery && dist <= 5) return;
             pursue(closestEnemyBot);
         }
     }
@@ -45,19 +49,91 @@ const defaultMove = function() {
     if (isAttacker) {
         const cpuX = arenaWidth - 1;
         const cpuY = floor(arenaHeight / 2);
+        if (isArtillery && getDistanceTo(cpuX, cpuY) <= 5) return;
         moveTo(cpuX, cpuY);
     } else {
-        defenderMove();
+        defenderMove(isArtillery);
     }
+};
+
+/**
+ * Attacker movement code works as follows:
+ *
+ * shared(A, B) records the centroid of the team. It is updated using a hacky
+ * exponentially-weighted moving average. Certain units update and respond to
+ * this EWMA (microing bots), while others just respond to it but don't update
+ * (repair bots).
+ *
+ * For bots that care about being near the group, the further away they are from
+ * this centroid the more they will be likely to move toward it.
+ */
+const attackerUpdateLocation = function(xCoord: number, yCoord: number): void {
+    if (!isAttacker) return;
+    // All bots update a shared counter, so by looking at it since our last turn
+    // we know how many bots are alive, hence the weight to update the EWMA.
+
+    // Increment the shared counter. 4 is a reasonable starting weight because
+    // that's how many bots we often have.
+    const DEFAULT_STARTING_BOTS = 4;
+    if (!exists(sharedC)) sharedC = DEFAULT_STARTING_BOTS - 1;
+    sharedC = sharedC + 1;
+
+    let myCounter = getData();
+    if (!isNumber(myCounter)) myCounter = sharedC - DEFAULT_STARTING_BOTS;
+    saveData(sharedC);
+
+    // TODO bots seem to be updated in a random order. But that's okay, if it
+    // nets out to the right average.
+    const numFriendsAlive = sharedC - myCounter;
+    debugLog("I see " + numFriendsAlive + " friends alive");
+
+    // First turn update
+    if (!exists(sharedA)) {
+        sharedA = xCoord;
+        sharedB = yCoord;
+        return;
+    }
+
+    const alpha = 1.0 / numFriendsAlive;
+    sharedA = xCoord * alpha + sharedA * (1 - alpha);
+    sharedB = yCoord * alpha + sharedB * (1 - alpha);
+};
+
+const checkTeamCentroidMove = function(minDist: number, maxDist: number) {
+    if (!isAttacker) return;
+    // Distances in bot land are manhattan distance
+    const distToCentroid = abs(x - sharedA) + abs(y - sharedB);
+
+    debugLog(
+        "My ",
+        x,
+        y,
+        " is ",
+        distToCentroid,
+        " from the center",
+        sharedA,
+        sharedB
+    );
+    debugLog("Limits: ", minDist, maxDist);
+
+    // If within minDist of centroid it's good. Beyond maxDist of centroid 100%
+    // move toward centroid. Linear in between.
+    const forceMoveProbability =
+        (distToCentroid - minDist) / (maxDist - minDist);
+    const forceMoveChance = min(100, max(0, 100 * forceMoveProbability));
+    debugLog("Moving to centroid with probability", forceMoveChance);
+
+    if (percentChance(forceMoveChance)) moveTo(round(sharedA), round(sharedB));
 };
 
 /**
  * We have seen some baddies. Setting this causes other bots to move accordingly
  * to the enemy's location.
+ * @param enemy
  */
 const setEnemySeen = function(enemy: Entity): void {
-    // This is currently not used for attackers, and we don't want to bludgeon
-    // the shared variables.
+    // This is only used for defenders, at the moment, so avoid clobbering the
+    // shared variables that are currently used by attackers.
     if (isAttacker) return;
 
     // We store 2 locations (see README). Bots attack to whichever location is
@@ -141,8 +217,10 @@ const clearLoc2 = function(): void {
  * If we don't see anyone, move to the closer of the two enemy locations, if
  * they exist. If we are close to one of the locations and no one's there,
  * specify that it is clear.
+ *
+ * @param isArtillery
  */
-const defenderMove = function(): void {
+const defenderMove = function(isArtillery?: boolean): void {
     const cpuX = arenaWidth - 2;
     const cpuY = floor(arenaHeight / 2);
 
@@ -172,7 +250,7 @@ const defenderMove = function(): void {
 
     // Check if we're close to either of the known enemy locations, and if we
     // don't see anyone there (with sensors) clear it.
-
+    // TODO: artillery should be able to clear targets too.
     if (size(array1) > 0 && getDistanceTo(array1[0], array1[1]) <= 1) {
         tryActivateSensors();
         if (areSensorsActivated()) clearLoc1();
@@ -182,22 +260,34 @@ const defenderMove = function(): void {
         if (areSensorsActivated()) clearLoc2();
     }
 
+    // Default size(array1) == 0 && size(array2) == 0
+    let targetX = cpuX;
+    let targetY = cpuY;
+
     // Figure out where we're moving.
-    if (size(array1) == 0 && size(array2) == 0) {
-        moveTo(cpuX, cpuY);
+    if (size(array1) > 0 && size(array2) === 0) {
+        targetX = array1[0];
+        targetY = array1[1];
     }
-    if (size(array1) > 0 && size(array2) == 0) {
-        moveTo(array1[0], array1[1]);
+    if (size(array2) > 0 && size(array1) === 0) {
+        targetX = array2[0];
+        targetY = array2[1];
     }
-    if (size(array2) > 0 && size(array1) == 0) {
-        moveTo(array2[0], array2[1]);
+    if (size(array1) > 0 && size(array2) > 0) {
+        // Both locations exist, attack to the closest one.
+        const dist1 = getDistanceTo(array1[0], array1[1]);
+        const dist2 = getDistanceTo(array2[0], array2[1]);
+
+        if (dist1 < dist2 || (dist1 == dist2 && percentChance(50))) {
+            targetX = array1[0];
+            targetY = array1[1];
+        } else {
+            targetX = array2[0];
+            targetY = array2[1];
+        }
     }
 
-    // Both locations exist, attack to the closest one.
-    const dist1 = getDistanceTo(array1[0], array1[1]);
-    const dist2 = getDistanceTo(array2[0], array2[1]);
-
-    if (dist1 == dist2 && percentChance(50)) moveTo(array1[0], array1[1]);
-    else if (dist1 < dist2) moveTo(array1[0], array1[1]);
-    else moveTo(array2[0], array2[1]);
+    // Artillery should not get too close.
+    if (isArtillery && getDistanceTo(targetX, targetY) <= 5) return;
+    moveTo(targetX, targetY);
 };

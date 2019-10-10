@@ -4,15 +4,23 @@
  * @param closestEnemyBot entity representing the closest bot we see
  * @param numEnemyBots total number of enemy bots visible
  */
-const tryEvadeLasers = function(closestEnemyBot: Entity, numEnemyBots: number) {
+const tryEvadeLasers = function(
+    closestEnemyBot: Entity,
+    numEnemyBots: number,
+    weaponMaxRange: number
+) {
     const enemyBotDistance = getDistanceTo(closestEnemyBot);
+    // Mainly for artillery. Lasers have a max range of 5, so why dodge them at
+    // longer ranges? This occasionally helped with dodging artillery, but we
+    // should write separate code for that.
+    if (enemyBotDistance > 5) return;
+
     // Don't stand in range of lasers
     // Move away from the bot, preferably toward a border
     if (x == closestEnemyBot.x && enemyBotDistance > 1) {
-        // TODO hack for fixing the bouncing back and forth issue
-        // get in diag range with missiles
-        // TODO: consider values other than 4 for other weapons
-        if (enemyBotDistance >= 4 && percentChance(50)) {
+        // TODO hack for fixing the bouncing back and forth issue at maximum
+        // weapon range. This helps us get on a diagonal but still in range.
+        if (enemyBotDistance == weaponMaxRange && percentChance(50)) {
             if (y > closestEnemyBot.y && canMove("up")) move("up");
             else if (y < closestEnemyBot.y && canMove("down")) move("down");
         }
@@ -41,6 +49,11 @@ const tryEvadeEnemy = function(closestEnemyBot: Entity, numEnemyBots: number) {
     // Prefer going backward to going forward, which can get us stuck.
     // TODO don't always run down from top left
     if (canMove("backward") && x <= closestEnemyBot.x) {
+        // Do occasional diagonal moves to get people to eat mines
+        if (y < closestEnemyBot.y && canMove("up") && percentChance(30))
+            move("up");
+        if (y > closestEnemyBot.y && canMove("down") && percentChance(30))
+            move("down");
         move("backward");
     }
     // TODO we should move backward when there's one bot too
@@ -90,10 +103,18 @@ const tryMeleeSmart = function() {
  */
 const tryFireMissiles = function() {
     if (willMissilesHit()) {
-        const gankTarget = findEntity(ENEMY, BOT, SORT_BY_LIFE, SORT_ASCENDING);
-        if (willMissilesHit(gankTarget)) fireMissiles(gankTarget);
+        const gank = findEntity(ENEMY, BOT, SORT_BY_LIFE, SORT_ASCENDING);
+        if (willMissilesHit(gank)) fireMissiles(gank);
         // If not, fire at anyone
         fireMissiles();
+    }
+};
+
+const tryFireArtillery = function() {
+    if (willArtilleryHit()) {
+        const gank = findEntity(ENEMY, BOT, SORT_BY_LIFE, SORT_ASCENDING);
+        if (willArtilleryHit(gank)) fireArtillery(gank);
+        fireArtillery();
     }
 };
 

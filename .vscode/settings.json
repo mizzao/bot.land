@@ -3,5 +3,8 @@
     "[typescript]": {
         // The bot.land editor uses 4 spaces.
         "editor.tabSize": 4
+    },
+    "files.exclude": {
+        "node_modules/": true
     }
 }

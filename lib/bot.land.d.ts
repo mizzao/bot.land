@@ -72,6 +72,7 @@ declare function floor(n: number): number;
 declare function max(...nums: number[]): number;
 declare function min(...nums: number[]): number;
 declare function percentChance(chance: number): boolean;
+declare function round(n: number): number;
 declare function size(arr: any[]): number;
 
 // Functions - Movement
@@ -82,7 +83,7 @@ declare function canMoveTo(x: number, y: number): boolean;
 declare function getDistanceTo(entity: Entity): number;
 declare function getDistanceTo(x: number, y: number): number;
 
-declare function move(dir: Direction): void;
+declare function move(dir?: Direction): void;
 declare function moveTo(entity: Entity): void;
 declare function moveTo(x: number, y: number): void;
 // Alias of moveTo

@@ -4,7 +4,7 @@
     "module": "none",
     "removeComments": true,
     "sourceMap": false,
-    "outFile": "bot.js"
+    "outFile": "../build/SmartMelee.js"
   },
   "files": [
     "SmartMelee.ts"
