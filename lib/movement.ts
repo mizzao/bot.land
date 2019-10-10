@@ -100,6 +100,7 @@ const attackerUpdateLocation = function(xCoord: number, yCoord: number): void {
 };
 
 const checkTeamCentroidMove = function(minDist: number, maxDist: number) {
+    if (!isAttacker) return;
     // Distances in bot land are manhattan distance
     const distToCentroid = abs(x - sharedA) + abs(y - sharedB);
 

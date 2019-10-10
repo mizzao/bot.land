@@ -11,11 +11,10 @@ const update = function() {
     const TEAM_MIN_DIST = 3.5;
     const TEAM_MAX_DIST = 7;
 
-    attackerUpdateLocation(x, y);
-    checkTeamCentroidMove(TEAM_MIN_DIST, TEAM_MAX_DIST);
-
-    // TODO artillery potshot? It's less important because it probably won't
-    // hit anything.
+    if (isAttacker) {
+        attackerUpdateLocation(x, y);
+        checkTeamCentroidMove(TEAM_MIN_DIST, TEAM_MAX_DIST);
+    }
 
     // Do we see anything nearby?
     const closestEnemy = findEntity(

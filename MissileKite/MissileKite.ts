@@ -36,10 +36,12 @@ const update = function() {
         tryFireMissiles();
     }
 
-    // Update our location for the team average
-    attackerUpdateLocation(x, y);
-    // We want to give bots room to maneuver but not go too far away
-    checkTeamCentroidMove(TEAM_MIN_DIST, TEAM_MAX_DIST);
+    if (isAttacker) {
+        // Update our location for the team average
+        attackerUpdateLocation(x, y);
+        // We want to give bots room to maneuver but not go too far away
+        checkTeamCentroidMove(TEAM_MIN_DIST, TEAM_MAX_DIST);
+    }
 
     // Do we see anything nearby?
     const closestEnemy = findEntity(

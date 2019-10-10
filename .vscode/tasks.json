@@ -100,6 +100,30 @@
                 "ArtilleryMicro compile"
             ],
             "problemMatcher": []
+        },
+        {
+            "label": "AggroMiner compile",
+            "type": "typescript",
+            "tsconfig": "AggroMiner/tsconfig.json",
+            "problemMatcher": [
+                "$tsc"
+            ],
+            "group": "build"
+        },
+        {
+            "label": "AggroMiner output",
+            "type": "shell",
+            "command": "sed",
+            "args": [
+                "-i",
+                "s/var //g",
+                "build/AggroMiner.js"
+            ],
+            "group": "build",
+            "dependsOn": [
+                "AggroMiner compile"
+            ],
+            "problemMatcher": []
         }
     ]
 }
