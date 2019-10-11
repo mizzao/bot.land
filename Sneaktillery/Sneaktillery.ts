@@ -15,7 +15,7 @@ const update = function() {
     const USE_SENSORS = false;
     // Whether we should run if an enemy happens upon us and we have TP, to try
     // and get to the other side of the CPU.
-    const TELEPORT_EVADE = false;
+    const TELEPORT_EVADE = true;
 
     // If we're evading, how close should the enemy be before we run?
     const EVADE_DISTANCE = 2;
@@ -47,8 +47,10 @@ const update = function() {
         closestEnemyDistance = getDistanceTo(closestEnemy);
         // If we see someone (sight range of 5) activate defensive measures.
         // When we have both reflect and cloak, stagger them back and forth.
-        if (canCloak() && !isReflecting()) cloak();
-        if (canReflect() && !isCloaked()) reflect();
+        if (closestEnemyDistance < 5.1) {
+            if (canCloak() && !isReflecting()) cloak();
+            if (canReflect() && !isCloaked()) reflect();
+        }
     }
 
     // Take out any chips that are in front of us. (Putting a sneaktillery in
@@ -60,6 +62,7 @@ const update = function() {
         SORT_ASCENDING
     );
     if (exists(closestChip)) {
+        // TODO: look into teleport evasion when killing chips...
         if (x <= closestChip.x && willArtilleryHit(closestChip))
             fireArtillery(closestChip);
     } else {
@@ -79,9 +82,11 @@ const update = function() {
     const enemyCpu = findEntity(ENEMY, CPU, SORT_BY_DISTANCE, SORT_ASCENDING);
     if (exists(enemyCpu) && willArtilleryHit(enemyCpu)) {
         // We are in firing position. Shoot or run?
+        // Evade melee units, but don't use the same time as our cloak
         if (
             closestEnemyDistance <= EVADE_DISTANCE &&
             TELEPORT_EVADE &&
+            !isCloaked() &&
             canTeleport()
         ) {
             // Try to teleport to as far to the other side as we can.
