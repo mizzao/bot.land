@@ -67,10 +67,7 @@ const update = function() {
             fireArtillery(closestChip);
     } else {
         // No chip in sight. If we need to use sensors, turn those on before going ahead
-        if (USE_SENSORS) {
-            tryActivateSensors();
-            if (!areSensorsActivated()) return;
-        }
+        if (USE_SENSORS) tryActivateSensors();
     }
 
     const cpuX = arenaWidth - 1;
@@ -109,6 +106,13 @@ const update = function() {
                 }
             }
         } else fireArtillery(enemyCpu);
+    }
+
+    // If we're using sensors, don't move forward without sensors on unless
+    // we're spotted
+    if (USE_SENSORS && !exists(closestEnemy)) {
+        tryActivateSensors();
+        if (!areSensorsActivated()) return;
     }
 
     // If we're here, we're not in a position to shoot at the CPU. So let's find
@@ -159,8 +163,17 @@ const update = function() {
 
     if (!canMoveTo(x1, y1)) {
         if (canMove("forward")) move("forward");
-        // If we can't move forward try going around. This will only run for one
-        // step.
+        else {
+            // Someone's blocking us, see if we can teleport around them. But
+            // don't teleport just because we can't see the target...only if we
+            // can't move forward.
+            if (canTeleport()) {
+                tryTeleport(x + TELEPORT_RANGE, y);
+                tryTeleport(x + TELEPORT_RANGE - 1, y);
+            }
+        }
+        // If we can't move otherwise try going around. This will only run for
+        // one step.
         moveTo(cpuX, cpuY);
     }
 
