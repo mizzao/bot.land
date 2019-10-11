@@ -128,6 +128,10 @@ const tryCloak = function() {
     if (canCloak()) cloak();
 };
 
+const tryLayMine = function() {
+    if (canLayMine()) layMine();
+};
+
 const tryReflect = function() {
     if (canReflect()) reflect();
 };
@@ -167,8 +171,8 @@ const tryShieldFriend = function(friend: Entity): void {
     if (!isShielded(friend) && canShield(friend)) shield(friend);
 };
 
-const tryLayMine = function() {
-    if (canLayMine()) layMine();
+const tryTeleport = function(xCoord: number, yCoord: number): void {
+    if (canTeleport(xCoord, yCoord)) teleport(xCoord, yCoord);
 };
 
 const tryZap = function() {

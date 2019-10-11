@@ -124,6 +124,30 @@
                 "AggroMiner compile"
             ],
             "problemMatcher": []
+        },
+        {
+            "label": "Sneaktillery compile",
+            "type": "typescript",
+            "tsconfig": "Sneaktillery/tsconfig.json",
+            "problemMatcher": [
+                "$tsc"
+            ],
+            "group": "build"
+        },
+        {
+            "label": "Sneaktillery output",
+            "type": "shell",
+            "command": "sed",
+            "args": [
+                "-i",
+                "s/var //g",
+                "build/Sneaktillery.js"
+            ],
+            "group": "build",
+            "dependsOn": [
+                "Sneaktillery compile"
+            ],
+            "problemMatcher": []
         }
     ]
 }
