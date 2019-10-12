@@ -106,10 +106,15 @@ const update = function() {
     // There's an enemy nearby but we can't attack it, or there are too many.
     // Artillery has min range 5, max range 7
     if (enemyBotDistance < evadeThreshold) {
-        // This is reversed from missiles. Because artillery has no short range it
-        // should definitely mine when enemies get close.
-        if (enemyBotDistance < 3.1 && percentChance(80)) tryLayMine();
-        else if (enemyBotDistance <= 4.1 && percentChance(50)) tryLayMine();
+        // There are basically two modes here...we're shooting, or we're mining.
+        // If the enemy is super close it doesn't help to run awy. Just fuckin'
+        // lay down a thicket of mines. If enough artillery are present, this
+        // should do plenty of damage. Requires us to have decent thrusters
+        // though.
+        if (enemyBotDistance == 5) tryLayMine();
+        else if (enemyBotDistance == 4 && percentChance(80)) tryLayMine();
+        else if (enemyBotDistance == 3 && percentChance(60)) tryLayMine();
+        else if (enemyBotDistance == 2 && percentChance(40)) tryLayMine();
 
         // Try evasive maneuvers
         tryEvadeEnemy(closestEnemyBot, numEnemyBots);
