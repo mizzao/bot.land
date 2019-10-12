@@ -96,11 +96,13 @@ const update = function() {
     // Protect against missiles/lasers if we have reflection
     if (enemyBotDistance < 5.1) {
         tryReflect();
-        if (!isShielded()) {
-            tryShieldSelf();
-        } else {
-            tryShieldFriendlyBots(4);
-        }
+        // Throw shields on other bots if possible. This is especially good for
+        // defense, where the tanks / other low health units will get shield
+        // priority and can last longer from the multiple DPS units supporting
+        // them.
+        tryShieldFriendlyBots(4);
+        // If no friendly bots shieldable, try myself
+        if (!isShielded()) tryShieldSelf();
     }
 
     // Mine layers should not do it from too far, so they have time to lay mine
