@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "composite": true,
+    "rootDir": ".",
+    "target": "es3",
+    "removeComments": true,
+    "sourceMap": false,
+  }
+}

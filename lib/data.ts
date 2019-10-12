@@ -1,3 +1,5 @@
+import "./bot.land"
+
 /**
  * Utilities for bots to save data across turns about themselves. Enables crazy
  * things like the chaos zapper.
@@ -8,7 +10,7 @@
  * TODO: this will conflict with missile micro potshots, so we need to have that
  * use this system when merging.
  */
-const saveData = function(datum): void {
+export const saveData = function(datum): void {
     const me = getEntityAt(x, y);
     if (!exists(sharedE)) {
         // We are the first person to save data, put ourselves in position 1
@@ -47,7 +49,7 @@ const saveData = function(datum): void {
     sharedE = array2;
 };
 
-const getData = function(): any {
+export const getData = function(): any {
     // No data saved yet
     if (!exists(sharedE)) return undefined;
 
@@ -71,7 +73,7 @@ const getData = function(): any {
     return undefined;
 };
 
-const isNumber = function(value: any): boolean {
+export const isNumber = function(value: any): boolean {
     if (value == value + 0) return true;
     else return false;
 };

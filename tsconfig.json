@@ -1,8 +1,10 @@
 {
-    "compilerOptions": {
-        "target": "es3",
-        "module": "none",
-        "sourceMap": false
-    },
-    "include": ["lib/**/*"]
+    "files": [],
+    "references": [
+    	{ "path": "./AggroMiner" }
+        { "path": "./ArtilleryMicro" }
+        { "path": "./MissileKite" }
+        { "path": "./SmartMelee" }
+        { "path": "./ZapKite" }
+    ]
 }

@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "declarationMap": true,
+    "composite": true,
+    "rootDir": ".",
+    "outDir": "../build/lib",
+    "target": "es3",
+    "removeComments": true,
+    "sourceMap": false,
+  },
+  "files": [
+    "data.ts",
+    "movement.ts",
+    "utils.ts"
+  ]
+}

@@ -1,3 +1,8 @@
+import "../lib/bot.land"
+import { attackerUpdateLocation, checkTeamCentroidMove, defenderMove, setEnemySeen, defaultMove } from "../lib/movement"
+import { tryMeleeSmart, tryShieldFriendlyBots, tryActivateSensors, tryLayMine, tryEvadeEnemy, tryEvadeLasers, tryReflect, tryShieldSelf } from "../lib/utils"
+
+
 /**
  * Aggro Miner
  *

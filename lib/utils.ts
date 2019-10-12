@@ -4,7 +4,7 @@
  * @param closestEnemyBot entity representing the closest bot we see
  * @param numEnemyBots total number of enemy bots visible
  */
-const tryEvadeLasers = function(
+export const tryEvadeLasers = function(
     closestEnemyBot: Entity,
     numEnemyBots: number,
     weaponMaxRange: number
@@ -44,7 +44,7 @@ const tryEvadeLasers = function(
  * @param closestEnemyBot
  * @param numEnemyBots
  */
-const tryEvadeEnemy = function(closestEnemyBot: Entity, numEnemyBots: number) {
+export const tryEvadeEnemy = function(closestEnemyBot: Entity, numEnemyBots: number) {
     // We're diagonally positioned from the enemy. Go in the direction with more space.
     // Prefer going backward to going forward, which can get us stuck.
     // TODO don't always run down from top left
@@ -80,7 +80,7 @@ const tryEvadeEnemy = function(closestEnemyBot: Entity, numEnemyBots: number) {
  * in melee range. It not hit a structure if an enemy bot is nearby, so if you
  * want to do that, call melee() manually.
  */
-const tryMeleeSmart = function() {
+export const tryMeleeSmart = function() {
     if (willMeleeHit()) {
         const gank = findEntity(ENEMY, BOT, SORT_BY_LIFE, SORT_ASCENDING);
         // Try a charge-hit first before a normal hit. I'm not sure about the
@@ -101,7 +101,7 @@ const tryMeleeSmart = function() {
  * A smart missile firing function that shoots at the enemy bot that is visible
  * with lowest health, if it is in range.
  */
-const tryFireMissiles = function() {
+export const tryFireMissiles = function() {
     if (willMissilesHit()) {
         const gank = findEntity(ENEMY, BOT, SORT_BY_LIFE, SORT_ASCENDING);
         if (willMissilesHit(gank)) fireMissiles(gank);
@@ -110,7 +110,7 @@ const tryFireMissiles = function() {
     }
 };
 
-const tryFireArtillery = function() {
+export const tryFireArtillery = function() {
     if (willArtilleryHit()) {
         const gank = findEntity(ENEMY, BOT, SORT_BY_LIFE, SORT_ASCENDING);
         if (willArtilleryHit(gank)) fireArtillery(gank);
@@ -118,21 +118,21 @@ const tryFireArtillery = function() {
     }
 };
 
-const tryActivateSensors = function() {
+export const tryActivateSensors = function() {
     // Sensors last 3 turns and have 6 cooldown, so don't need to count turns
     // like we could with a shield.
     if (canActivateSensors()) activateSensors();
 };
 
-const tryCloak = function() {
+export const tryCloak = function() {
     if (canCloak()) cloak();
 };
 
-const tryReflect = function() {
+export const tryReflect = function() {
     if (canReflect()) reflect();
 };
 
-const tryShieldSelf = function() {
+export const tryShieldSelf = function() {
     // TODO: we could wait longer if we have a shield already. But it could be
     // damaged so maybe better to refresh.
     if (canShield()) shield();
@@ -143,7 +143,7 @@ const tryShieldSelf = function() {
  * cooldown between bots.
  * @param range
  */
-const tryShieldFriendlyBots = function(range: number) {
+export const tryShieldFriendlyBots = function(range: number) {
     if (canShield()) {
         // Try a few options.
         // First, lowest health
@@ -162,15 +162,15 @@ const tryShieldFriendlyBots = function(range: number) {
     }
 };
 
-const tryShieldFriend = function(friend: Entity): void {
+export const tryShieldFriend = function(friend: Entity): void {
     // Not sure if canShield checks our shield range...
     if (!isShielded(friend) && canShield(friend)) shield(friend);
 };
 
-const tryLayMine = function() {
+export const tryLayMine = function() {
     if (canLayMine()) layMine();
 };
 
-const tryZap = function() {
+export const tryZap = function() {
     if (canZap()) zap();
 };

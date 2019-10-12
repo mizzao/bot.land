@@ -1,15 +1,12 @@
 {
+  "extends": "../base",
   "compilerOptions": {
-    "target": "es3",
-    "module": "none",
-    "removeComments": true,
-    "sourceMap": false,
-    "outFile": "../build/SmartMelee.js"
+    "outDir": "../build/SmartMelee",
   },
   "files": [
     "SmartMelee.ts"
   ],
-  "include": [
-    "../lib/**/*"
+  "references": [
+      { "path": "../lib" }
   ]
 }

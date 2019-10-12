@@ -1,15 +1,12 @@
 {
+  "extends": "../base",
   "compilerOptions": {
-    "target": "es3",
-    "module": "none",
-    "removeComments": true,
-    "sourceMap": false,
-    "outFile": "../build/ZapKite.js"
+    "outDir": "../build/ZapKite",
   },
   "files": [
     "ZapKite.ts"
   ],
-  "include": [
-    "../lib/**/*"
+  "references": [
+      { "path": "../lib" }
   ]
 }
