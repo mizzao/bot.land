@@ -68,7 +68,7 @@ const update = function() {
     );
     if (exists(closestEnemy)) {
         const enemyDistance = getDistanceTo(closestEnemy);
-        if (enemyDistance < 2.1 && canZap()) zap();
+        if (enemyDistance < 2.1) tryZap();
         figureItOut();
     } else {
         // No enemies visible. Move with the team.
@@ -85,16 +85,17 @@ const checkDefenseActivation = function(enemyBotDistance: number): void {
 };
 
 const checkZapActivation = function(enemyBotDistance: number): void {
-    if (enemyBotDistance < 2.8) {
-        // a distance of 2 only hits diagonals
-        // but charging melee units can close that quickly
+    // Zap has a range of 2, but we should activate at 3 because next turn both
+    // us and/or the other melee unit may charge, closing the gap quickly, and
+    // then we spend a turn turning on zapper instead of punching them.
+    // Observations show that in melee battles the bot usually dies before
+    // zapper finishes, so it doesn't matter if we waste a turn with it too early.
 
-        // TODO if we can cloak, we should probably wait zap after cloaking,
-        // and possibly after some time.
+    // TODO if we can cloak, we should probably wait zap after cloaking, and
+    // possibly after some time.
 
-        // TODO this is too late for teleporters, which hit us before we
-        // zap. For teleporters we should have a version that cloaks as soon
-        // as enemies are in sight.
-        if (canZap()) zap();
-    }
+    // TODO this is too late for teleporters, which hit us before we
+    // zap. For teleporters we should have a version that cloaks as soon
+    // as enemies are in sight.
+    if (enemyBotDistance < 3.1) tryZap();
 };
