@@ -69,6 +69,8 @@ const update = function() {
     if (exists(closestEnemy)) {
         const enemyDistance = getDistanceTo(closestEnemy);
         if (enemyDistance < 2.1) tryZap();
+        // Need this here, otherwise we will not be able to kill chips/CPUs.
+        if (willMeleeHit()) melee();
     }
 
     // Nothing else to do. Move with the team.
