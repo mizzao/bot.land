@@ -69,17 +69,26 @@ const update = function() {
     if (exists(closestEnemy)) {
         const enemyDistance = getDistanceTo(closestEnemy);
         if (enemyDistance < 2.1) tryZap();
-        figureItOut();
-    } else {
-        // No enemies visible. Move with the team.
-        defaultMove();
+        // Need this here, otherwise we will not be able to kill chips/CPUs.
+        if (willMeleeHit()) melee();
     }
+
+    // Nothing else to do. Move with the team.
+    defaultMove();
 };
 
 const checkDefenseActivation = function(enemyBotDistance: number): void {
     if (enemyBotDistance < 5.1) {
-        if (canCloak()) cloak();
-        if (canReflect()) reflect();
+        // Stagger reflects and cloaks for the "dark templar" bot. For attacker
+        // cloak first to close faster. For defender reflect vice versa.
+        if (isAttacker) {
+            if (canCloak() && !isReflecting()) cloak();
+            if (canReflect() && !isCloaked()) reflect();
+        } else {
+            if (canReflect() && !isCloaked()) reflect();
+            if (canCloak() && !isReflecting()) cloak();
+        }
+
         if (canShield() && !isShielded()) shield();
     }
 };
