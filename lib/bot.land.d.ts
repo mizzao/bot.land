@@ -109,15 +109,19 @@ declare function cloak(): void;
 declare function canCloak(): boolean;
 declare function isCloaked(): boolean;
 declare function reflect(): void;
+declare function canLayMine(): boolean;
+declare function zap(): void;
+declare function canZap(): boolean;
 declare function canReflect(): boolean;
 declare function isReflecting(): boolean;
 declare function shield(entity?: Entity): void;
 declare function canShield(entity?: Entity): boolean;
 declare function isShielded(entity?: Entity): boolean;
 declare function layMine(): void;
-declare function canLayMine(): boolean;
-declare function zap(): void;
-declare function canZap(): boolean;
+declare function canTeleport(entity?: Entity): boolean;
+declare function canTeleport(xCoord: number, yCoord: number): boolean;
+declare function teleport(entity?: Entity): void;
+declare function teleport(xCoord: number, yCoord: number): void;
 
 // Variables
 declare const x: number;
