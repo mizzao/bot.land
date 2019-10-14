@@ -1,0 +1,13 @@
+{
+    "files": [],
+    "include": [],
+    "references": [
+        { "path": "./lib" },
+        { "path": "./AggroMiner" },
+        { "path": "./ArtilleryMicro" },
+        { "path": "./MissileKite" },
+        { "path": "./SmartMelee" },
+        { "path": "./Sneaktillery" },
+        { "path": "./ZapKite" }
+    ]
+}

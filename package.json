@@ -1,5 +1,30 @@
 {
+  "private": true,
+  "name": "ts-botland-project-starter",
+  "version": "1.0.0",
+  "description": "Sample repository for Typescript based Bot.Land projects",
+  "author": "Guillaume Contesso a.k.a. PopGoesTheWza",
+  "license": "MIT",
+  "keywords": [
+    "botland",
+    "ts",
+    "typescript"
+  ],
+  "scripts": {
+    "build-clean": "rimraf build && npm run build",
+    "build": "tsc --build src",
+    "format": "prettier --write 'src/**/*.ts' 'src/**/*.json'",
+    "lint": "tslint --project src"
+  },
+  "repository": "https://github.com/PopGoesTheWza/bot.land.git",
   "devDependencies": {
-    "typescript": "^3.6.3"
+    "copyfiles": "^2.1.1",
+    "prettier": "^1.18.2",
+    "rimraf": "^3.0.0",
+    "tslint": "^5.20.0",
+    "tslint-config-airbnb": "^5.11.2",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-plugin-prettier": "^2.0.1",
+    "typescript": "^3.6.4"
   }
 }

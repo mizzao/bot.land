@@ -1,2 +1,10 @@
-node_modules
-build
+build/**/*.d.ts
+build/**/*.tsbuildinfo
+
+node_modules/
+.node_modules/
+
+\#*\#
+.\#*
+
+yarn-error.log

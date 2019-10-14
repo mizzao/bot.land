@@ -1,0 +1,7 @@
+{
+    "extends": "../tsconfig-botland",
+    "compilerOptions": {
+        "outFile": "../../build/lib/lib1.js"
+    },
+    "include": ["**/*.ts"]
+}
