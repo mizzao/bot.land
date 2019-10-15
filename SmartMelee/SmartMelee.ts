@@ -34,6 +34,14 @@ const update = function() {
             // defender
             checkZapActivation(enemyBotDistance);
             checkDefenseActivation(enemyBotDistance);
+
+            // Hack for evading (dumb, straight-line) miners on defense. Just
+            // jump to a different row to pursue them. 2 or less and we are in
+            // charge range, so no evasion needed.
+            const allEnemyBots = findEntities(ENEMY, BOT, false);
+            const numEnemyBots = size(allEnemyBots);
+            if (numEnemyBots == 1)
+                tryEvadeMiners(closestEnemyBot, enemyBotDistance);
         }
     }
 
@@ -96,5 +104,34 @@ const checkZapActivation = function(enemyBotDistance: number): void {
         // zap. For teleporters we should have a version that cloaks as soon
         // as enemies are in sight.
         if (canZap()) zap();
+    }
+};
+
+/**
+ * Defensive function for melee bots to avoid running blindly into mines.
+ * @param closestEnemyBot entity representing the closest bot we see
+ */
+const tryEvadeMiners = function(
+    closestEnemyBot: Entity,
+    enemyBotDistance: number
+) {
+    // This is the most likely scenario, chasing enemies across the map horizontally
+    if (y == closestEnemyBot.y && enemyBotDistance >= 3) {
+        // Move up or down randomly if both directions are available
+        if (canMove("up") && canMove("down")) {
+            if (percentChance(50)) move("up");
+            else move("down");
+        }
+        if (canMove("up")) move("up");
+        if (canMove("down")) move("down");
+    }
+    // Less likely scenario, chasing a miner vertically
+    if (x == closestEnemyBot.x && enemyBotDistance >= 3) {
+        if (canMove("forward") && canMove("backward")) {
+            if (percentChance(50)) move("forward");
+            else move("backward");
+        }
+        if (canMove("backward")) move("backward");
+        if (canMove("forward")) move("forward");
     }
 };
