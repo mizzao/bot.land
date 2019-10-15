@@ -24,10 +24,10 @@ const update = function() {
     const state = getData();
     if (!exists(state)) {
         // Need to save in case we reach a terminator
-        saveData('first turn done');
+        saveData("first turn done");
         // As defender, try to cast shield on anyone nearby
         if (!isAttacker && canShield()) {
-            debugLog('Casting defender first turn shield');
+            debugLog("Casting defender first turn shield");
             shieldTanks();
         }
         // If first turn of the game, take a shot before anyone turns on
@@ -44,7 +44,12 @@ const update = function() {
     }
 
     // Do we see anything nearby?
-    const closestEnemy = findEntity(ENEMY, ANYTHING, SORT_BY_DISTANCE, SORT_ASCENDING);
+    const closestEnemy = findEntity(
+        ENEMY,
+        ANYTHING,
+        SORT_BY_DISTANCE,
+        SORT_ASCENDING
+    );
     if (!exists(closestEnemy)) {
         // Missile micro bot usually has shield 1, which has range 3. But
         // sometimes we'll put shield 2 on it with lower thrusters.
@@ -54,13 +59,23 @@ const update = function() {
         else defaultMove();
     }
 
-    const closestEnemyBot = findEntity(ENEMY, BOT, SORT_BY_DISTANCE, SORT_ASCENDING);
+    const closestEnemyBot = findEntity(
+        ENEMY,
+        BOT,
+        SORT_BY_DISTANCE,
+        SORT_ASCENDING
+    );
     if (!exists(closestEnemyBot)) {
         // Only thing left here is a chip.
         // DON'T always use sensors here...gets us into trouble.
         // Just happily bash the Chip if the other bots hasn't noticed us.
         // If we're bashing a CPU though, then don't let artillery shoot us from out of range.
-        const enemyCpu = findEntity(ENEMY, CPU, SORT_BY_DISTANCE, SORT_ASCENDING);
+        const enemyCpu = findEntity(
+            ENEMY,
+            CPU,
+            SORT_BY_DISTANCE,
+            SORT_ASCENDING
+        );
         tryShieldFriendlyBots(4);
         if (exists(enemyCpu) && canActivateSensors()) activateSensors();
         if (isAttacker) figureItOut();
@@ -79,7 +94,8 @@ const update = function() {
 
     // Heuristic: on defense don't evade lasers, just let the tanks do that.
     // Mine layers don't evade lasers, you want them to come follow in.
-    if (!canLayMine() && numFriendlyBots < 5) tryEvadeLasers(closestEnemyBot, numEnemyBots, 4);
+    if (!canLayMine() && numFriendlyBots < 5)
+        tryEvadeLasers(closestEnemyBot, numEnemyBots, 4);
 
     // Protect against missiles/lasers if we have reflection. Note: protect
     // first before we try to evade, otherwise we end up doing a lot of evasion
@@ -163,5 +179,7 @@ const shieldTanks = function() {
         if (exists(maybeFriend)) tryShieldFriend(maybeFriend);
     }
     // If none of that worked, just shield whoever's closest
-    tryShieldFriend(findEntity(IS_OWNED_BY_ME, BOT, SORT_BY_DISTANCE, SORT_ASCENDING));
+    tryShieldFriend(
+        findEntity(IS_OWNED_BY_ME, BOT, SORT_BY_DISTANCE, SORT_ASCENDING)
+    );
 };

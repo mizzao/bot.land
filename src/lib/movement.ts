@@ -8,12 +8,23 @@
  */
 const defaultMove = function(isArtillery?: boolean) {
     // React to enemy structures
-    const closestEnemyChip = findEntity(ENEMY, CHIP, SORT_BY_DISTANCE, SORT_ASCENDING);
+    const closestEnemyChip = findEntity(
+        ENEMY,
+        CHIP,
+        SORT_BY_DISTANCE,
+        SORT_ASCENDING
+    );
     if (exists(closestEnemyChip)) {
-        if (canMoveTo(closestEnemyChip) && getDistanceTo(closestEnemyChip) > 1) pursue(closestEnemyChip);
+        if (canMoveTo(closestEnemyChip) && getDistanceTo(closestEnemyChip) > 1)
+            pursue(closestEnemyChip);
     }
     // Bots come after structures, if the script didn't react to it already
-    const closestEnemyBot = findEntity(ENEMY, BOT, SORT_BY_DISTANCE, SORT_ASCENDING);
+    const closestEnemyBot = findEntity(
+        ENEMY,
+        BOT,
+        SORT_BY_DISTANCE,
+        SORT_ASCENDING
+    );
     if (exists(closestEnemyBot)) {
         const dist = getDistanceTo(closestEnemyBot);
         if (canMoveTo(closestEnemyBot) && dist > 1) {
@@ -74,7 +85,7 @@ const attackerUpdateLocation = function(xCoord: number, yCoord: number): void {
     // TODO bots seem to be updated in a random order. But that's okay, if it
     // nets out to the right average.
     const numFriendsAlive = sharedC - myCounter;
-    debugLog('I see ' + numFriendsAlive + ' friends alive');
+    debugLog("I see " + numFriendsAlive + " friends alive");
 
     // First turn update
     if (!exists(sharedA)) {
@@ -93,14 +104,24 @@ const checkTeamCentroidMove = function(minDist: number, maxDist: number) {
     // Distances in bot land are manhattan distance
     const distToCentroid = abs(x - sharedA) + abs(y - sharedB);
 
-    debugLog('My ', x, y, ' is ', distToCentroid, ' from the center', sharedA, sharedB);
-    debugLog('Limits: ', minDist, maxDist);
+    debugLog(
+        "My ",
+        x,
+        y,
+        " is ",
+        distToCentroid,
+        " from the center",
+        sharedA,
+        sharedB
+    );
+    debugLog("Limits: ", minDist, maxDist);
 
     // If within minDist of centroid it's good. Beyond maxDist of centroid 100%
     // move toward centroid. Linear in between.
-    const forceMoveProbability = (distToCentroid - minDist) / (maxDist - minDist);
+    const forceMoveProbability =
+        (distToCentroid - minDist) / (maxDist - minDist);
     const forceMoveChance = min(100, max(0, 100 * forceMoveProbability));
-    debugLog('Moving to centroid with probability', forceMoveChance);
+    debugLog("Moving to centroid with probability", forceMoveChance);
 
     if (percentChance(forceMoveChance)) moveTo(round(sharedA), round(sharedB));
 };
@@ -164,11 +185,11 @@ const setEnemySeen = function(enemy: Entity): void {
 // there is no hope of confusing them. Note that crazy stuff can happen here
 // since these variables can be overwritten in function calls.
 const saveArr1Loc1 = function() {
-    debugLog('enemy target 1 set at (' + array1[0] + ',' + array1[1] + ')');
+    debugLog("enemy target 1 set at (" + array1[0] + "," + array1[1] + ")");
     sharedA = array1;
 };
 const saveArr2Loc2 = function() {
-    debugLog('enemy target 2 set at (' + array2[0] + ',' + array2[1] + ')');
+    debugLog("enemy target 2 set at (" + array2[0] + "," + array2[1] + ")");
     sharedB = array2;
 };
 // We cannot set an array to undefined, that causes a bug. So return empty array
@@ -182,12 +203,12 @@ const loadArr2Loc2 = function() {
     else array2 = sharedB;
 };
 const clearLoc1 = function(): void {
-    debugLog('enemy target 1 clear');
+    debugLog("enemy target 1 clear");
     array1 = [];
     sharedA = array1;
 };
 const clearLoc2 = function(): void {
-    debugLog('enemy target 2 clear');
+    debugLog("enemy target 2 clear");
     array2 = [];
     sharedB = array2;
 };
@@ -207,7 +228,11 @@ const defenderMove = function(isArtillery?: boolean): void {
     loadArr2Loc2();
     // If we're all balled up near the CPU, there's enough of us, and no one sees any
     // enemies, go out and investigate the chips and see if they're okay.
-    if (size(array1) == 0 && size(array2) == 0 && getDistanceTo(cpuX, cpuY) <= 1) {
+    if (
+        size(array1) == 0 &&
+        size(array2) == 0 &&
+        getDistanceTo(cpuX, cpuY) <= 1
+    ) {
         const allFriends = findEntitiesInRange(IS_OWNED_BY_ME, BOT, true, 3);
         const numFriends = size(allFriends);
         if (numFriends >= 6) {

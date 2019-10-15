@@ -28,16 +28,21 @@ const update = function() {
         // Negative = move up. Positive = move down.
         if (memoryDir < 0) {
             saveData(memoryDir + 1);
-            if (canMove('up')) move('up');
+            if (canMove("up")) move("up");
         } else {
             saveData(memoryDir - 1);
-            if (canMove('down')) move('down');
+            if (canMove("down")) move("down");
         }
     }
 
     let closestEnemyDistance = 8; // Some large number that doesn't matter
 
-    const closestEnemy = findEntity(ENEMY, BOT, SORT_BY_DISTANCE, SORT_ASCENDING);
+    const closestEnemy = findEntity(
+        ENEMY,
+        BOT,
+        SORT_BY_DISTANCE,
+        SORT_ASCENDING
+    );
     if (exists(closestEnemy)) {
         closestEnemyDistance = getDistanceTo(closestEnemy);
         // If we see someone (sight range of 5) activate defensive measures.
@@ -50,10 +55,16 @@ const update = function() {
 
     // Take out any chips that are in front of us. (Putting a sneaktillery in
     // front of a chip means go for the CPU instead.)
-    const closestChip = findEntity(ENEMY, CHIP, SORT_BY_DISTANCE, SORT_ASCENDING);
+    const closestChip = findEntity(
+        ENEMY,
+        CHIP,
+        SORT_BY_DISTANCE,
+        SORT_ASCENDING
+    );
     if (exists(closestChip)) {
         // TODO: look into teleport evasion when killing chips...
-        if (x <= closestChip.x && willArtilleryHit(closestChip)) fireArtillery(closestChip);
+        if (x <= closestChip.x && willArtilleryHit(closestChip))
+            fireArtillery(closestChip);
     } else {
         // No chip in sight. If we need to use sensors, turn those on before going ahead
         if (USE_SENSORS) tryActivateSensors();
@@ -69,7 +80,12 @@ const update = function() {
     if (exists(enemyCpu) && willArtilleryHit(enemyCpu)) {
         // We are in firing position. Shoot or run?
         // Evade melee units, but don't use the same time as our cloak
-        if (closestEnemyDistance <= EVADE_DISTANCE && TELEPORT_EVADE && !isCloaked() && canTeleport()) {
+        if (
+            closestEnemyDistance <= EVADE_DISTANCE &&
+            TELEPORT_EVADE &&
+            !isCloaked() &&
+            canTeleport()
+        ) {
             // Try to teleport to as far to the other side as we can.
             const xt = arenaWidth - 1;
             // Above the CPU
@@ -146,7 +162,7 @@ const update = function() {
     // - if we see spot 1 and it's occupied, go to spot 2, etc.
 
     if (!canMoveTo(x1, y1)) {
-        if (canMove('forward')) move('forward');
+        if (canMove("forward")) move("forward");
         else {
             // Someone's blocking us, see if we can teleport around them. But
             // don't teleport just because we can't see the target...only if we
@@ -163,7 +179,7 @@ const update = function() {
 
     // We can see spot 1!
     if (!exists(getEntityAt(x1, y1))) {
-        if (canMove('forward')) move('forward');
+        if (canMove("forward")) move("forward");
         moveTo(x1, y1);
     }
 

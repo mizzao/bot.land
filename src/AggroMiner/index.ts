@@ -17,7 +17,12 @@ const update = function() {
     }
 
     // Do we see anything nearby?
-    const closestEnemy = findEntity(ENEMY, ANYTHING, SORT_BY_DISTANCE, SORT_ASCENDING);
+    const closestEnemy = findEntity(
+        ENEMY,
+        ANYTHING,
+        SORT_BY_DISTANCE,
+        SORT_ASCENDING
+    );
     if (!exists(closestEnemy)) {
         tryShieldFriendlyBots(4);
         // If we don't see anything and can activate sensors, go ahead.
@@ -32,7 +37,12 @@ const update = function() {
         }
     }
 
-    const closestEnemyBot = findEntity(ENEMY, BOT, SORT_BY_DISTANCE, SORT_ASCENDING);
+    const closestEnemyBot = findEntity(
+        ENEMY,
+        BOT,
+        SORT_BY_DISTANCE,
+        SORT_ASCENDING
+    );
     if (!exists(closestEnemyBot)) {
         tryShieldFriendlyBots(4);
         tryActivateSensors();

@@ -4,7 +4,7 @@ declare const ENEMY = 1;
 declare const CHIP = 1024;
 declare const CPU = 512;
 declare const BOT = 8;
-declare const ANYTHING: any;
+declare const ANYTHING;
 
 declare enum EntityMatchFlags {
     IS_OWNED_BY_ME = 256,
@@ -12,24 +12,30 @@ declare enum EntityMatchFlags {
     ENEMY = 1,
     CHIP = 1024,
     CPU = 512,
-    BOT = 8,
+    BOT = 8
 }
 
 declare const SORT_BY_DISTANCE = 1;
 declare const SORT_BY_LIFE = 2;
 declare enum EntitySortType {
     SORT_BY_DISTANCE,
-    SORT_BY_LIFE,
+    SORT_BY_LIFE
 }
 
 declare const SORT_ASCENDING = 1;
 declare const SORT_DESCENDING = 2;
 declare enum EntitySortOrder {
     SORT_ASCENDING,
-    SORT_DESCENDING,
+    SORT_DESCENDING
 }
 
-declare type Direction = 'up' | 'down' | 'left' | 'right' | 'forward' | 'backward';
+declare type Direction =
+    | "up"
+    | "down"
+    | "left"
+    | "right"
+    | "forward"
+    | "backward";
 
 // Terminators
 
@@ -40,19 +46,19 @@ declare function exists(thing: any): boolean;
 declare function findEntities(
     friendlyOrEnemy: EntityMatchFlags,
     type: EntityMatchFlags,
-    allowReturningSelf: boolean,
+    allowReturningSelf: boolean
 ): Entity[];
 declare function findEntitiesInRange(
     friendlyOrEnemy: EntityMatchFlags,
     type: EntityMatchFlags,
     allowReturningSelf: boolean,
-    range: number,
-): any;
+    range: number
+);
 declare function findEntity(
     friendlyOrEnemy: EntityMatchFlags,
     type: EntityMatchFlags,
     sortBy: EntitySortType,
-    sortOrder: EntitySortOrder,
+    sortOrder: EntitySortOrder
 ): Entity;
 declare function getEntityAt(x: number, y: number): Entity;
 declare function figureItOut(): void;
@@ -127,7 +133,7 @@ declare const arenaWidth: number;
 declare const arenaHeight: number;
 
 // Shared Variables
-declare let sharedA: any, sharedB: any, sharedC: any, sharedD: any, sharedE: any;
+declare let sharedA, sharedB, sharedC, sharedD, sharedE;
 
 // Entities
 declare interface Entity {

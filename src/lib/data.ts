@@ -8,7 +8,7 @@
  * TODO: this will conflict with missile micro potshots, so we need to have that
  * use this system when merging.
  */
-const saveData = function(datum: any): void {
+const saveData = function(datum): void {
     const me = getEntityAt(x, y);
     if (!exists(sharedE)) {
         // We are the first person to save data, put ourselves in position 1
@@ -40,7 +40,7 @@ const saveData = function(datum: any): void {
     // We weren't in the array, insert ourselves at the end
     array1[i] = datum;
     array2[i] = me;
-    debugLog('Saved ' + datum + ' for ' + me);
+    debugLog("Saved " + datum + " for " + me);
     debugLog(array2);
     debugLog(array1);
     sharedD = array1;

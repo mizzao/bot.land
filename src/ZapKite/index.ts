@@ -36,20 +36,35 @@ const update = function() {
     // Once that's out of the way, we can do other stuff.
 
     // Do we see anything nearby?
-    const closestEnemy = findEntity(ENEMY, ANYTHING, SORT_BY_DISTANCE, SORT_ASCENDING);
+    const closestEnemy = findEntity(
+        ENEMY,
+        ANYTHING,
+        SORT_BY_DISTANCE,
+        SORT_ASCENDING
+    );
     if (!exists(closestEnemy)) {
         tryActivateSensors();
         if (isAttacker) figureItOut();
         else defaultMove();
     }
 
-    const closestEnemyBot = findEntity(ENEMY, BOT, SORT_BY_DISTANCE, SORT_ASCENDING);
+    const closestEnemyBot = findEntity(
+        ENEMY,
+        BOT,
+        SORT_BY_DISTANCE,
+        SORT_ASCENDING
+    );
     if (!exists(closestEnemyBot)) {
         // Only thing left here is a chip.
         // DON'T always use sensors here...gets us into trouble.
         // Just happily bash the Chip if the other bots hasn't noticed us.
         // If we're bashing a CPU though, then don't let artillery shoot us from out of range.
-        const enemyCpu = findEntity(ENEMY, CPU, SORT_BY_DISTANCE, SORT_ASCENDING);
+        const enemyCpu = findEntity(
+            ENEMY,
+            CPU,
+            SORT_BY_DISTANCE,
+            SORT_ASCENDING
+        );
         // TODO: even around the CPU we need to be moving to increase DPS.
         if (exists(enemyCpu)) tryActivateSensors();
         if (isAttacker) figureItOut();
@@ -84,7 +99,8 @@ const update = function() {
         const leftX = x - 1;
         const rightX = x + 1;
         const leftValid = isValidXPos(leftX) && !exists(getEntityAt(leftX, y));
-        const rightValid = isValidXPos(rightX) && !exists(getEntityAt(rightX, y));
+        const rightValid =
+            isValidXPos(rightX) && !exists(getEntityAt(rightX, y));
         if (leftValid && rightValid) {
             if (percentChance(50)) moveTo(leftX, y);
             else moveTo(rightX, y);
@@ -113,21 +129,21 @@ const simpleEvadeLasers = function(closestEnemyBot: Entity) {
     // Don't stand in range of lasers
     if (x == closestEnemyBot.x) {
         // With missile micro we could bounce back and forth, but that's what we want here!
-        if (canMove('backward') && canMove('forward')) {
-            if (percentChance(50)) move('backward');
-            move('forward');
+        if (canMove("backward") && canMove("forward")) {
+            if (percentChance(50)) move("backward");
+            move("forward");
         }
-        if (canMove('backward')) move('backward');
-        if (canMove('forward')) move('forward');
+        if (canMove("backward")) move("backward");
+        if (canMove("forward")) move("forward");
     }
     if (y == closestEnemyBot.y) {
         // Move up or down randomly if both directions are available
-        if (canMove('up') && canMove('down')) {
-            if (percentChance(50)) move('up');
-            move('down');
+        if (canMove("up") && canMove("down")) {
+            if (percentChance(50)) move("up");
+            move("down");
         }
-        if (canMove('up')) move('up');
-        if (canMove('down')) move('down');
+        if (canMove("up")) move("up");
+        if (canMove("down")) move("down");
     }
 };
 

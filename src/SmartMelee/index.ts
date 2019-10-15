@@ -7,7 +7,12 @@
  */
 const update = function() {
     // Equip when we see someone, not blindly
-    const closestEnemyBot = findEntity(ENEMY, BOT, SORT_BY_DISTANCE, SORT_ASCENDING);
+    const closestEnemyBot = findEntity(
+        ENEMY,
+        BOT,
+        SORT_BY_DISTANCE,
+        SORT_ASCENDING
+    );
     if (exists(closestEnemyBot)) {
         setEnemySeen(closestEnemyBot);
 
@@ -43,7 +48,8 @@ const update = function() {
     // the rest.
     //
     // TODO this is undesirable behavior for ranged bots that also have melee
-    const canRangeTarget = willMissilesHit() || willArtilleryHit() || willLasersHit();
+    const canRangeTarget =
+        willMissilesHit() || willArtilleryHit() || willLasersHit();
     if (!canRangeTarget && canCharge()) {
         if (exists(closestEnemyBot) && !willMeleeHit(closestEnemyBot)) {
             pursue(closestEnemyBot);
@@ -54,7 +60,12 @@ const update = function() {
     tryMeleeSmart();
 
     // Use zapper on structures, even if not fighting
-    const closestEnemy = findEntity(ENEMY, ANYTHING, SORT_BY_DISTANCE, SORT_ASCENDING);
+    const closestEnemy = findEntity(
+        ENEMY,
+        ANYTHING,
+        SORT_BY_DISTANCE,
+        SORT_ASCENDING
+    );
     if (exists(closestEnemy)) {
         const enemyDistance = getDistanceTo(closestEnemy);
         if (enemyDistance < 2.1) tryZap();

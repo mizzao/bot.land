@@ -4,7 +4,11 @@
  * @param closestEnemyBot entity representing the closest bot we see
  * @param numEnemyBots total number of enemy bots visible
  */
-const tryEvadeLasers = function(closestEnemyBot: Entity, numEnemyBots: number, weaponMaxRange: number) {
+const tryEvadeLasers = function(
+    closestEnemyBot: Entity,
+    numEnemyBots: number,
+    weaponMaxRange: number
+) {
     const enemyBotDistance = getDistanceTo(closestEnemyBot);
     // Mainly for artillery. Lasers have a max range of 5, so why dodge them at
     // longer ranges? This occasionally helped with dodging artillery, but we
@@ -17,20 +21,20 @@ const tryEvadeLasers = function(closestEnemyBot: Entity, numEnemyBots: number, w
         // TODO hack for fixing the bouncing back and forth issue at maximum
         // weapon range. This helps us get on a diagonal but still in range.
         if (enemyBotDistance == weaponMaxRange && percentChance(50)) {
-            if (y > closestEnemyBot.y && canMove('up')) move('up');
-            else if (y < closestEnemyBot.y && canMove('down')) move('down');
+            if (y > closestEnemyBot.y && canMove("up")) move("up");
+            else if (y < closestEnemyBot.y && canMove("down")) move("down");
         }
-        if (canMove('backward')) move('backward');
-        if (canMove('forward') && numEnemyBots <= 1) move('forward');
+        if (canMove("backward")) move("backward");
+        if (canMove("forward") && numEnemyBots <= 1) move("forward");
     }
     if (y == closestEnemyBot.y && enemyBotDistance > 1) {
         // Move up or down randomly if both directions are available
-        if (canMove('up') && canMove('down')) {
-            if (percentChance(50)) move('up');
-            move('down');
+        if (canMove("up") && canMove("down")) {
+            if (percentChance(50)) move("up");
+            move("down");
         }
-        if (canMove('up')) move('up');
-        if (canMove('down')) move('down');
+        if (canMove("up")) move("up");
+        if (canMove("down")) move("down");
     }
 };
 
@@ -44,28 +48,30 @@ const tryEvadeEnemy = function(closestEnemyBot: Entity, numEnemyBots: number) {
     // We're diagonally positioned from the enemy. Go in the direction with more space.
     // Prefer going backward to going forward, which can get us stuck.
     // TODO don't always run down from top left
-    if (canMove('backward') && x <= closestEnemyBot.x) {
+    if (canMove("backward") && x <= closestEnemyBot.x) {
         // Do occasional diagonal moves to get people to eat mines
-        if (y < closestEnemyBot.y && canMove('up') && percentChance(30)) move('up');
-        if (y > closestEnemyBot.y && canMove('down') && percentChance(30)) move('down');
-        move('backward');
+        if (y < closestEnemyBot.y && canMove("up") && percentChance(30))
+            move("up");
+        if (y > closestEnemyBot.y && canMove("down") && percentChance(30))
+            move("down");
+        move("backward");
     }
     // TODO we should move backward when there's one bot too
     // clean this code up
-    if (canMove('up') && y <= closestEnemyBot.y) {
-        move('up');
+    if (canMove("up") && y <= closestEnemyBot.y) {
+        move("up");
     }
-    if (canMove('down') && y >= closestEnemyBot.y) {
-        move('down');
+    if (canMove("down") && y >= closestEnemyBot.y) {
+        move("down");
     }
-    if (canMove('backward')) {
-        if (numEnemyBots > 1) move('backward');
+    if (canMove("backward")) {
+        if (numEnemyBots > 1) move("backward");
     }
-    if (canMove('forward') && x >= closestEnemyBot.x && numEnemyBots <= 1) {
-        move('forward');
+    if (canMove("forward") && x >= closestEnemyBot.x && numEnemyBots <= 1) {
+        move("forward");
     }
-    if (canMove('backward')) {
-        move('backward');
+    if (canMove("backward")) {
+        move("backward");
     }
 };
 
@@ -80,12 +86,14 @@ const tryMeleeSmart = function() {
         // Try a charge-hit first before a normal hit. I'm not sure about the
         // semantics of how willMeleeHit() works, so just being a bit extra
         // careful.
-        if (getDistanceTo(gank) <= 2 && canCharge() && willMeleeHit(gank)) melee(gank);
+        if (getDistanceTo(gank) <= 2 && canCharge() && willMeleeHit(gank))
+            melee(gank);
         else if (getDistanceTo(gank) <= 1) melee(gank);
         // If we can't hit our target of choice, we'll still hit a close by bot
         // (not chip or CPU)
         const close = findEntity(ENEMY, BOT, SORT_BY_DISTANCE, SORT_ASCENDING);
-        if (getDistanceTo(close) <= 2 && canCharge() && willMeleeHit(close)) melee(close);
+        if (getDistanceTo(close) <= 2 && canCharge() && willMeleeHit(close))
+            melee(close);
         else if (getDistanceTo(close) <= 1) melee(close);
     }
 };
@@ -143,9 +151,13 @@ const tryShieldFriendlyBots = function(range: number) {
     if (canShield()) {
         // Try a few options.
         // First, lowest health
-        tryShieldFriend(findEntity(IS_OWNED_BY_ME, BOT, SORT_BY_LIFE, SORT_ASCENDING));
+        tryShieldFriend(
+            findEntity(IS_OWNED_BY_ME, BOT, SORT_BY_LIFE, SORT_ASCENDING)
+        );
         // Closest
-        tryShieldFriend(findEntity(IS_OWNED_BY_ME, BOT, SORT_BY_DISTANCE, SORT_ASCENDING));
+        tryShieldFriend(
+            findEntity(IS_OWNED_BY_ME, BOT, SORT_BY_DISTANCE, SORT_ASCENDING)
+        );
         // Anyone else? Shield 3 has a range of 5.
         array1 = findEntitiesInRange(IS_OWNED_BY_ME, BOT, false, range);
         for (let i = 0; i < size(array1); i++) {

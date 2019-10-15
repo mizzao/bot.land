@@ -17,7 +17,12 @@ const update = function() {
     }
 
     // Do we see anything nearby?
-    const closestEnemy = findEntity(ENEMY, ANYTHING, SORT_BY_DISTANCE, SORT_ASCENDING);
+    const closestEnemy = findEntity(
+        ENEMY,
+        ANYTHING,
+        SORT_BY_DISTANCE,
+        SORT_ASCENDING
+    );
     if (!exists(closestEnemy)) {
         tryShieldFriendlyBots(4);
         // If we don't see anything and can activate sensors, go ahead.
@@ -37,7 +42,12 @@ const update = function() {
         }
     }
 
-    const closestEnemyBot = findEntity(ENEMY, BOT, SORT_BY_DISTANCE, SORT_ASCENDING);
+    const closestEnemyBot = findEntity(
+        ENEMY,
+        BOT,
+        SORT_BY_DISTANCE,
+        SORT_ASCENDING
+    );
     if (!exists(closestEnemyBot)) {
         tryShieldFriendlyBots(4);
         tryActivateSensors();
@@ -64,7 +74,8 @@ const update = function() {
     // Don't stand in range of lasers. On defense when there are lots of allies,
     // don't evade lasers though, just let the tanks reflect them. Welcome
     // lasers if we have mines.
-    if (!canLayMine() && numFriendlyBots < 6) tryEvadeLasers(closestEnemyBot, numEnemyBots, 5);
+    if (!canLayMine() && numFriendlyBots < 6)
+        tryEvadeLasers(closestEnemyBot, numEnemyBots, 5);
 
     if (enemyBotDistance < 5.1) {
         tryReflect();
