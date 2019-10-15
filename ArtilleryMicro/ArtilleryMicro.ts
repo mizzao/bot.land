@@ -1,8 +1,3 @@
-import "../lib/bot.land"
-import { attackerUpdateLocation, checkTeamCentroidMove, defenderMove, setEnemySeen, defaultMove } from "../lib/movement"
-import { tryFireArtillery, tryShieldFriendlyBots, tryActivateSensors, tryLayMine, tryEvadeEnemy, tryEvadeLasers, tryReflect, tryShieldSelf } from "../lib/utils"
-
-
 /**
  * Micro artillery
  *

@@ -1,12 +1,12 @@
 {
   "extends": "../base",
   "compilerOptions": {
-    "outDir": "../build/SmartMelee",
+    "outFile": "../build/SmartMelee.js",
   },
   "files": [
     "SmartMelee.ts"
   ],
   "references": [
-      { "path": "../lib" }
+      { "path": "../lib", "prepend": true }
   ]
 }

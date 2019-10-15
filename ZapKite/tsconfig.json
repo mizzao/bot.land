@@ -1,12 +1,12 @@
 {
   "extends": "../base",
   "compilerOptions": {
-    "outDir": "../build/ZapKite",
+    "outFile": "../build/ZapKite.js",
   },
   "files": [
     "ZapKite.ts"
   ],
   "references": [
-      { "path": "../lib" }
+      { "path": "../lib", "prepend": true }
   ]
 }

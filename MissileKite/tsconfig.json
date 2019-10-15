@@ -1,12 +1,12 @@
 {
   "extends": "../base",
   "compilerOptions": {
-    "outDir": "../build/MissileKite",
+    "outFile": "../build/MissileKite.js",
   },
   "files": [
     "MissileKite.ts"
   ],
   "references": [
-      { "path": "../lib" }
+      { "path": "../lib", "prepend": true }
   ]
 }

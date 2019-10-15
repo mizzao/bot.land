@@ -1,5 +1,7 @@
-import { getData, isNumber, saveData } from './data'
-import { tryActivateSensors } from './utils'
+
+/// <reference path="./data.ts"/>
+/// <reference path="./utils.ts"/>
+
 
 /**
  * Default moving function, to be called if a specific script has no opinion. We
@@ -9,7 +11,7 @@ import { tryActivateSensors } from './utils'
  *
  * @param isArtillery if artillery, will not move <5 units from target.
  */
-export const defaultMove = function(isArtillery?: boolean) {
+const defaultMove = function(isArtillery?: boolean) {
     // React to enemy structures
     const closestEnemyChip = findEntity(
         ENEMY,
@@ -70,7 +72,7 @@ export const defaultMove = function(isArtillery?: boolean) {
  * For bots that care about being near the group, the further away they are from
  * this centroid the more they will be likely to move toward it.
  */
-export const attackerUpdateLocation = function(xCoord: number, yCoord: number): void {
+const attackerUpdateLocation = function(xCoord: number, yCoord: number): void {
     if (!isAttacker) return;
     // All bots update a shared counter, so by looking at it since our last turn
     // we know how many bots are alive, hence the weight to update the EWMA.
@@ -102,7 +104,7 @@ export const attackerUpdateLocation = function(xCoord: number, yCoord: number): 
     sharedB = yCoord * alpha + sharedB * (1 - alpha);
 };
 
-export const checkTeamCentroidMove = function(minDist: number, maxDist: number) {
+const checkTeamCentroidMove = function(minDist: number, maxDist: number) {
     if (!isAttacker) return;
     // Distances in bot land are manhattan distance
     const distToCentroid = abs(x - sharedA) + abs(y - sharedB);
@@ -134,7 +136,7 @@ export const checkTeamCentroidMove = function(minDist: number, maxDist: number) 
  * to the enemy's location.
  * @param enemy
  */
-export const setEnemySeen = function(enemy: Entity): void {
+const setEnemySeen = function(enemy: Entity): void {
     // This is only used for defenders, at the moment, so avoid clobbering the
     // shared variables that are currently used by attackers.
     if (isAttacker) return;
@@ -187,30 +189,30 @@ export const setEnemySeen = function(enemy: Entity): void {
 // We'll just use array1 and array2 when working with the two locations so that
 // there is no hope of confusing them. Note that crazy stuff can happen here
 // since these variables can be overwritten in function calls.
-export const saveArr1Loc1 = function() {
+const saveArr1Loc1 = function() {
     debugLog("enemy target 1 set at (" + array1[0] + "," + array1[1] + ")");
     sharedA = array1;
 };
-export const saveArr2Loc2 = function() {
+const saveArr2Loc2 = function() {
     debugLog("enemy target 2 set at (" + array2[0] + "," + array2[1] + ")");
     sharedB = array2;
 };
 // We cannot set an array to undefined, that causes a bug. So return empty array
 // instead.
-export const loadArr1Loc1 = function() {
+const loadArr1Loc1 = function() {
     if (!exists(sharedA)) array1 = [];
     else array1 = sharedA;
 };
-export const loadArr2Loc2 = function() {
+const loadArr2Loc2 = function() {
     if (!exists(sharedB)) array2 = [];
     else array2 = sharedB;
 };
-export const clearLoc1 = function(): void {
+const clearLoc1 = function(): void {
     debugLog("enemy target 1 clear");
     array1 = [];
     sharedA = array1;
 };
-export const clearLoc2 = function(): void {
+const clearLoc2 = function(): void {
     debugLog("enemy target 2 clear");
     array2 = [];
     sharedB = array2;
@@ -223,7 +225,7 @@ export const clearLoc2 = function(): void {
  *
  * @param isArtillery
  */
-export const defenderMove = function(isArtillery?: boolean): void {
+const defenderMove = function(isArtillery?: boolean): void {
     const cpuX = arenaWidth - 2;
     const cpuY = floor(arenaHeight / 2);
 

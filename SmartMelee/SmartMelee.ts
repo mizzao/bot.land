@@ -1,9 +1,3 @@
-// TODO might need to remove anything superfluous here
-import { getData, saveData } from '../lib/data'
-import { setEnemySeen, defaultMove } from "../lib/movement"
-import { tryMeleeSmart, tryZap, tryShieldFriendlyBots, tryLayMine } from "../lib/utils"
-
-
 /**
  * Smart melee bot. Can use melee, zapper, and other equipment in a smart way.
  * Coordinates movements with ranged DPS bots.

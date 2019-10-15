@@ -1,12 +1,12 @@
 {
   "extends": "../base",
   "compilerOptions": {
-    "outDir": "../build/AggroMiner",
+    "outFile": "../build/AggroMiner.js",
   },
   "files": [
     "AggroMiner.ts"
   ],
   "references": [
-      { "path": "../lib" }
+      { "path": "../lib", "prepend": true }
   ]
 }

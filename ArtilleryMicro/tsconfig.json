@@ -1,12 +1,12 @@
 {
   "extends": "../base",
   "compilerOptions": {
-    "outDir": "../build/ArtilleryMicro",
+    "outFile": "../build/ArtilleryMicro.js",
   },
   "files": [
     "ArtilleryMicro.ts"
   ],
   "references": [
-      { "path": "../lib" }
+      { "path": "../lib", "prepend": true }
   ]
 }

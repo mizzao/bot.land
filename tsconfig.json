@@ -1,6 +1,7 @@
 {
     "files": [],
     "references": [
+    	{ "path": "./lib" }
     	{ "path": "./AggroMiner" }
         { "path": "./ArtilleryMicro" }
         { "path": "./MissileKite" }

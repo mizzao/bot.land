@@ -1,7 +1,3 @@
-import { getData, saveData } from '../lib/data'
-import { setEnemySeen, defaultMove } from "../lib/movement"
-import { tryCloak, tryReflect, tryShieldSelf, tryActivateSensors, tryMeleeSmart, tryZap } from "../lib/utils"
-
 /**
  * The chaos zapper: a truly ridiculous unit.
  *

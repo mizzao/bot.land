@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
+    "module":"system",
     "declaration": true,
     "declarationMap": true,
     "composite": true,
     "rootDir": ".",
-    "outDir": "../build/lib",
+    "outFile": "../build/lib.js",
     "target": "es3",
     "removeComments": true,
     "sourceMap": false,

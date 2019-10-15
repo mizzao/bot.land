@@ -1,4 +1,6 @@
-import "./bot.land"
+
+/// <reference path="./bot.land.d.ts"/>
+
 
 /**
  * Utilities for bots to save data across turns about themselves. Enables crazy
@@ -10,7 +12,7 @@ import "./bot.land"
  * TODO: this will conflict with missile micro potshots, so we need to have that
  * use this system when merging.
  */
-export const saveData = function(datum): void {
+const saveData = function(datum): void {
     const me = getEntityAt(x, y);
     if (!exists(sharedE)) {
         // We are the first person to save data, put ourselves in position 1
@@ -49,7 +51,7 @@ export const saveData = function(datum): void {
     sharedE = array2;
 };
 
-export const getData = function(): any {
+const getData = function(): any {
     // No data saved yet
     if (!exists(sharedE)) return undefined;
 
@@ -73,7 +75,7 @@ export const getData = function(): any {
     return undefined;
 };
 
-export const isNumber = function(value: any): boolean {
+const isNumber = function(value: any): boolean {
     if (value == value + 0) return true;
     else return false;
 };
