@@ -1,4 +1,4 @@
-# bot.land - Google Apps Script project starter
+# bot.land - Script project starter
 
 This repository aims at building how one or more bots on [Bot Land](https://play.bot.land).
 
