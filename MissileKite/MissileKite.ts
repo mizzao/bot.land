@@ -78,12 +78,16 @@ const update = function() {
         else defaultMove();
     }
 
-    // At this point we know there is an enemy bot nearby.
-    setEnemySeen(closestEnemyBot);
-
-    const allEnemyBots = findEntities(ENEMY, BOT, false);
-    const numEnemyBots = size(allEnemyBots);
+    const numEnemyBots = size(findEntities(ENEMY, BOT, false));
     const enemyBotDistance = getDistanceTo(closestEnemyBot);
+
+    // At this point we know there is an enemy bot nearby.
+    const shouldPursue = markEnemyLocation(
+        closestEnemyBot,
+        enemyBotDistance,
+        numEnemyBots
+    );
+    if (!shouldPursue) moveToCPU();
 
     const allFriendlyBots = findEntities(IS_OWNED_BY_ME, BOT, true);
     const numFriendlyBots = size(allFriendlyBots);

@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es3",
     "module": "none",
+    "removeComments": true,
     "sourceMap": false,
     "outFile": "bot.js"
   },

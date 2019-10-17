@@ -14,9 +14,16 @@ const update = function() {
         SORT_ASCENDING
     );
     if (exists(closestEnemyBot)) {
-        setEnemySeen(closestEnemyBot);
-
         const enemyBotDistance = getDistanceTo(closestEnemyBot);
+        const numEnemyBots = size(findEntities(ENEMY, BOT, false));
+
+        const shouldPursue = markEnemyLocation(
+            closestEnemyBot,
+            enemyBotDistance,
+            numEnemyBots
+        );
+        if (!shouldPursue) moveToCPU();
+
         // Zap first or shield first? The great debate. We rarely start zappers
         // next to bots because they will get killed too fast. Starting on
         // diagonals allows an extra turn to either start zap or arm a defense.
@@ -38,8 +45,6 @@ const update = function() {
             // Hack for evading (dumb, straight-line) miners on defense. Just
             // jump to a different row to pursue them. 2 or less and we are in
             // charge range, so no evasion needed.
-            const allEnemyBots = findEntities(ENEMY, BOT, false);
-            const numEnemyBots = size(allEnemyBots);
             if (numEnemyBots == 1)
                 tryEvadeMiners(closestEnemyBot, enemyBotDistance);
         }

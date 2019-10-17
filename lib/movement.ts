@@ -43,19 +43,57 @@ const defaultMove = function() {
 
     // Where to go?
     if (isAttacker) {
-        const cpuX = arenaWidth - 1;
-        const cpuY = floor(arenaHeight / 2);
-        moveTo(cpuX, cpuY);
+        moveToCPU();
     } else {
         defenderMove();
     }
 };
 
+const moveToCPU = function() {
+    const cpuX = arenaWidth - 2;
+    const cpuY = floor(arenaHeight / 2);
+    moveTo(cpuX, cpuY);
+};
+
 /**
  * We have seen some baddies. Setting this causes other bots to move accordingly
  * to the enemy's location.
+ * @returns whether we should chase this bot.
  */
-const setEnemySeen = function(enemy: Entity): void {
+const markEnemyLocation = function(
+    enemy: Entity,
+    distToEnemy: number,
+    totalEnemies: number
+): boolean {
+    let targetX = enemy.x;
+    let targetY = enemy.y;
+
+    // First decide if we should pursue this enemy. The risks to pursuing are
+    // lures and landmines. When bots are far left on the map, we'll only mark a
+    // bot's location for pursuit if someone sees either more than one bot, or
+    // target is <= 2 hexes away from someone. If neither of these are true,
+    // don't try to pursue.
+
+    // For 13x17 maps this is 16 // 3 = 5.
+    const pursuitBoundary = floor(arenaWidth / 3);
+    if (targetX < pursuitBoundary && distToEnemy > 2 && totalEnemies == 1)
+        return false;
+
+    // If we see a target at the top or bottom edge of the map, assume they're
+    // trying to rush the CPU and set intercept accordingly.
+    if (targetX >= arenaWidth - 1 - 4) {
+        const cpuX = arenaWidth - 2;
+        const cpuY = floor(arenaHeight / 2);
+        if (targetY <= 0 + 1) {
+            targetX = cpuX;
+            targetY = cpuY - 5;
+        }
+        if (targetY >= arenaHeight - 1 - 1) {
+            targetX = cpuX;
+            targetY = cpuY + 5;
+        }
+    }
+
     // There are 5 shared variables, A-E.
     // - shared(A,B): location of one last seen enemy
     // - shared(C,D): location of second last seen enemy, that is not close to
@@ -66,29 +104,29 @@ const setEnemySeen = function(enemy: Entity): void {
 
     // Record 1st location if we don't already have one.
     if (!exists(sharedA)) {
-        sharedA = enemy.x;
-        sharedB = enemy.y;
+        sharedA = targetX;
+        sharedB = targetY;
         return;
     }
-    const locOneDiff = abs(enemy.x - sharedA) + abs(enemy.y - sharedB);
+    const locOneDiff = abs(targetX - sharedA) + abs(targetY - sharedB);
     // If it's sufficiently close, count it as the same "area" and just
     // update.
     if (locOneDiff < 6) {
-        sharedA = enemy.x;
-        sharedB = enemy.y;
+        sharedA = targetX;
+        sharedB = targetY;
         return;
     }
 
     // This seems like a different location. Do we have something recorded for location 2?
     if (!exists(sharedC)) {
-        sharedC = enemy.x;
-        sharedD = enemy.y;
+        sharedC = targetX;
+        sharedD = targetY;
         return;
     }
-    const locTwoDiff = abs(enemy.x - sharedC) + abs(enemy.y - sharedD);
+    const locTwoDiff = abs(targetX - sharedC) + abs(targetY - sharedD);
     if (locTwoDiff < 8) {
-        sharedC = enemy.x;
-        sharedD = enemy.y;
+        sharedC = targetX;
+        sharedD = targetY;
         return;
     }
 
@@ -125,7 +163,7 @@ const defenderMove = function(): void {
     // Check if we're close to either of the known enemy locations, and if we
     // don't see anyone there (with sensors) clear it.
     if (exists(sharedA)) {
-        if (getDistanceTo(sharedA, sharedB) <= 1) {
+        if (getDistanceTo(sharedA, sharedB) <= 2) {
             tryActivateSensors();
             if (areSensorsActivated()) {
                 sharedA = undefined;
@@ -134,7 +172,7 @@ const defenderMove = function(): void {
         }
     }
     if (exists(sharedC)) {
-        if (getDistanceTo(sharedC, sharedD) <= 1) {
+        if (getDistanceTo(sharedC, sharedD) <= 2) {
             tryActivateSensors();
             if (areSensorsActivated()) {
                 sharedC = undefined;
@@ -143,21 +181,27 @@ const defenderMove = function(): void {
         }
     }
 
-    if (!exists(sharedA) && !exists(sharedC)) {
-        moveTo(cpuX, cpuY);
+    // In the absence of a defined location, attack to the closer of the target
+    // and the CPU. This makes us less vulnerable to lures but potentially more
+    // vulnerable to micro. Let's see what happens...
+    let x1 = cpuX;
+    let y1 = cpuY;
+    if (exists(sharedA)) {
+        x1 = sharedA;
+        y1 = sharedB;
     }
-    if (exists(sharedA) && !exists(sharedC)) {
-        moveTo(sharedA, sharedB);
-    }
-    if (exists(sharedC) && !exists(sharedA)) {
-        moveTo(sharedC, sharedD);
+    let x2 = cpuX;
+    let y2 = cpuY;
+    if (exists(sharedC)) {
+        x2 = sharedC;
+        y2 = sharedD;
     }
 
     // Both locations exist, attack to the closest one.
-    const dist1 = getDistanceTo(sharedA, sharedB);
-    const dist2 = getDistanceTo(sharedC, sharedD);
+    const dist1 = getDistanceTo(x1, y1);
+    const dist2 = getDistanceTo(x2, y2);
 
-    if (dist1 == dist2 && percentChance(50)) moveTo(sharedA, sharedB);
-    else if (dist1 < dist2) moveTo(sharedA, sharedB);
-    else moveTo(sharedC, sharedD);
+    if (dist1 == dist2 && percentChance(50)) moveTo(x1, x2);
+    else if (dist1 < dist2) moveTo(x1, x2);
+    else moveTo(y1, y2);
 };
