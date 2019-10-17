@@ -82,12 +82,12 @@ const update = function() {
     const enemyBotDistance = getDistanceTo(closestEnemyBot);
 
     // At this point we know there is an enemy bot nearby.
-    const shouldPursue = markEnemyLocation(
+    const shouldDisengage = markEnemyLocation(
         closestEnemyBot,
         enemyBotDistance,
         numEnemyBots
     );
-    if (!shouldPursue) moveToCPU();
+    if (shouldDisengage) moveToCPU();
 
     const allFriendlyBots = findEntities(IS_OWNED_BY_ME, BOT, true);
     const numFriendlyBots = size(allFriendlyBots);

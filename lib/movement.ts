@@ -58,7 +58,7 @@ const moveToCPU = function() {
 /**
  * We have seen some baddies. Setting this causes other bots to move accordingly
  * to the enemy's location.
- * @returns whether we should chase this bot.
+ * @returns true if we should disengage from chasing this bot.
  */
 const markEnemyLocation = function(
     enemy: Entity,
@@ -77,7 +77,7 @@ const markEnemyLocation = function(
     // For 13x17 maps this is 16 // 3 = 5.
     const pursuitBoundary = floor(arenaWidth / 3);
     if (targetX < pursuitBoundary && distToEnemy > 2 && totalEnemies == 1)
-        return false;
+        return true;
 
     // If we see a target at the top or bottom edge of the map, assume they're
     // trying to rush the CPU and set intercept accordingly.
@@ -181,27 +181,21 @@ const defenderMove = function(): void {
         }
     }
 
-    // In the absence of a defined location, attack to the closer of the target
-    // and the CPU. This makes us less vulnerable to lures but potentially more
-    // vulnerable to micro. Let's see what happens...
-    let x1 = cpuX;
-    let y1 = cpuY;
-    if (exists(sharedA)) {
-        x1 = sharedA;
-        y1 = sharedB;
+    if (!exists(sharedA) && !exists(sharedC)) {
+        moveTo(cpuX, cpuY);
     }
-    let x2 = cpuX;
-    let y2 = cpuY;
-    if (exists(sharedC)) {
-        x2 = sharedC;
-        y2 = sharedD;
+    if (exists(sharedA) && !exists(sharedC)) {
+        moveTo(sharedA, sharedB);
+    }
+    if (exists(sharedC) && !exists(sharedA)) {
+        moveTo(sharedC, sharedD);
     }
 
     // Both locations exist, attack to the closest one.
-    const dist1 = getDistanceTo(x1, y1);
-    const dist2 = getDistanceTo(x2, y2);
+    const dist1 = getDistanceTo(sharedA, sharedB);
+    const dist2 = getDistanceTo(sharedC, sharedD);
 
-    if (dist1 == dist2 && percentChance(50)) moveTo(x1, x2);
-    else if (dist1 < dist2) moveTo(x1, x2);
-    else moveTo(y1, y2);
+    if (dist1 == dist2 && percentChance(50)) moveTo(sharedA, sharedB);
+    else if (dist1 < dist2) moveTo(sharedA, sharedB);
+    else moveTo(sharedC, sharedD);
 };

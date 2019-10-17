@@ -17,12 +17,12 @@ const update = function() {
         const enemyBotDistance = getDistanceTo(closestEnemyBot);
         const numEnemyBots = size(findEntities(ENEMY, BOT, false));
 
-        const shouldPursue = markEnemyLocation(
+        const shouldDisengage = markEnemyLocation(
             closestEnemyBot,
             enemyBotDistance,
             numEnemyBots
         );
-        if (!shouldPursue) moveToCPU();
+        if (shouldDisengage) moveToCPU();
 
         // Zap first or shield first? The great debate. We rarely start zappers
         // next to bots because they will get killed too fast. Starting on
