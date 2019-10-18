@@ -39,6 +39,9 @@ const update = function() {
         tryFireMissiles();
     }
 
+    // This is a temporary hack to help protect against cheese.
+    tryAntiCheeseShield();
+
     // Do we see anything nearby?
     const closestEnemy = findEntity(
         ENEMY,
@@ -181,4 +184,37 @@ const shieldTanks = function() {
     tryShieldFriend(
         findEntity(IS_OWNED_BY_ME, BOT, SORT_BY_DISTANCE, SORT_ASCENDING)
     );
+};
+
+// If enemies spotted in cheesing location, cast shield on CPU (multiple times)
+// if possible.
+const tryAntiCheeseShield = function() {
+    const cpuX = arenaWidth - 2;
+    const cpuY = floor(arenaHeight / 2);
+    // Check enemy location 1
+    if (exists(sharedA)) {
+        const dist1 = abs(sharedA - cpuX) + abs(sharedB - cpuY);
+        if (sharedA >= arenaWidth - 1 - 1 && dist1 <= 5) {
+            tryShieldCPU();
+        }
+    }
+    // Check enemy location 2
+    if (exists(sharedC)) {
+        const dist2 = abs(sharedC - cpuX) + abs(sharedD - cpuY);
+        if (sharedC >= arenaWidth - 1 - 1 && dist2 <= 5) {
+            tryShieldCPU();
+        }
+    }
+};
+
+const tryShieldCPU = function(): void {
+    const cpu = findEntity(
+        IS_OWNED_BY_ME,
+        CPU,
+        SORT_BY_DISTANCE,
+        SORT_ASCENDING
+    );
+    if (!exists(cpu)) return;
+    // Don't check if the CPU is shielded, cause we can multiple cast.
+    if (canShield(cpu)) shield(cpu);
 };
