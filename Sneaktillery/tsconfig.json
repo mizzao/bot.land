@@ -3,5 +3,7 @@
   "compilerOptions": {
     "outFile": "../build/Sneaktillery.js"
   },
-  "files": ["index.ts"]
+  "files": [
+    "Sneaktillery.ts"
+  ]
 }

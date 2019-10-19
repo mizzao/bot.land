@@ -3,5 +3,7 @@
   "compilerOptions": {
     "outFile": "../build/MissileKite.js"
   },
-  "files": ["index.ts"]
+  "files": [
+    "MissileKite.ts"
+  ]
 }

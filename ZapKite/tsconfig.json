@@ -3,5 +3,7 @@
   "compilerOptions": {
     "outFile": "../build/ZapKite.js"
   },
-  "files": ["index.ts"]
+  "files": [
+    "ZapKite.ts"
+  ]
 }

@@ -27,5 +27,12 @@ If you're familiar with SC2 units, they include things like
 
 Several commands are available as NPM scripts: `npm run <command>`. The most commonly used are:
 
-- `build` and  `build-clean` to compile all bots
+- `build` and `build-clean` to compile all bots
 - `format` and `lint` to normalise code and check its correcteness
+
+## Add a new bot
+
+1. Copy any bot folder (i.e. `Sneaktillery`) to a new folder `<NewBot>`.
+2. Rename the bot (e.g. `Sneaktillery.ts` --> `<NewBot>.ts`).
+3. Edit the `<NewBot>/tsconfig.json` to set `files` and `outFile` with the name of the new bot.
+4. Edit [`tsconfig.json`](tsconfig.json) and add a reference to `<NewBot>`.

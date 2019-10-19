@@ -3,5 +3,7 @@
   "compilerOptions": {
     "outFile": "../build/AggroMiner.js"
   },
-  "files": ["index.ts"]
+  "files": [
+    "AggroMiner.ts"
+  ]
 }

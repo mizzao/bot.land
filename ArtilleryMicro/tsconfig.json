@@ -3,5 +3,7 @@
   "compilerOptions": {
     "outFile": "../build/ArtilleryMicro.js"
   },
-  "files": ["index.ts"]
+  "files": [
+    "ArtilleryMicro.ts"
+  ]
 }

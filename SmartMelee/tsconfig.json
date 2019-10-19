@@ -3,5 +3,7 @@
   "compilerOptions": {
     "outFile": "../build/SmartMelee.js"
   },
-  "files": ["index.ts"]
+  "files": [
+    "SmartMelee.ts"
+  ]
 }
