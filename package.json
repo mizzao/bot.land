@@ -16,12 +16,11 @@
     "build-ts": "tsc --build",
     "build": "yarn build-ts && yarn botland",
     "format": "prettier --write '**/*.ts' '**/tsconfig*.json'",
-    "lint": "tslint --project",
+    "lint": "tslint --project .",
     "watch": "tsc --build --watch"
   },
   "repository": "https://github.com/mizzao/bot.land.git",
   "devDependencies": {
-    "copyfiles": "^2.1.1",
     "prettier": "^1.18.2",
     "rimraf": "^3.0.0",
     "tslint": "^5.20.0",
