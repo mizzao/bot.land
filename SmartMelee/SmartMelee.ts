@@ -6,6 +6,7 @@
  * bot moves. So effective DPS can be twice as high (!!) as with normal zapper.
  */
 const update = function() {
+    const CLOAK_BEFORE_REFLECT = false;
     // Equip when we see someone, not blindly
     const closestEnemyBot = findEntity(
         ENEMY,
@@ -28,12 +29,12 @@ const update = function() {
         //
         // For now: defenders zap first. Attackers turn on defenses first.
         if (isAttacker) {
-            checkDefenseActivation(enemyBotDistance);
+            checkDefenseActivation(enemyBotDistance, CLOAK_BEFORE_REFLECT);
             checkZapActivation(enemyBotDistance);
         } else {
             // defender
             checkZapActivation(enemyBotDistance);
-            checkDefenseActivation(enemyBotDistance);
+            checkDefenseActivation(enemyBotDistance, CLOAK_BEFORE_REFLECT);
         }
     }
 
@@ -77,11 +78,14 @@ const update = function() {
     defaultMove();
 };
 
-const checkDefenseActivation = function(enemyBotDistance: number): void {
+const checkDefenseActivation = function(
+    enemyBotDistance: number,
+    cloakBeforeReflect: boolean
+): void {
     if (enemyBotDistance < 5.1) {
-        // Stagger reflects and cloaks for the "dark templar" bot. For attacker
-        // cloak first to close faster. For defender reflect vice versa.
-        if (isAttacker) {
+        // Cloak before reflect is used situationally to sneak up on enemies,
+        // but most of the time we want to reflect first.
+        if (cloakBeforeReflect) {
             if (canCloak() && !isReflecting()) cloak();
             if (canReflect() && !isCloaked()) reflect();
         } else {
