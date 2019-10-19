@@ -1,7 +1,7 @@
 {
   "extends": "../tsconfig-botland",
   "compilerOptions": {
-    "outFile": "../../build/MissileKite.js"
+    "outFile": "../build/ArtilleryMicro.js"
   },
   "files": ["index.ts"]
 }

@@ -1,7 +1,7 @@
 {
   "extends": "../tsconfig-botland",
   "compilerOptions": {
-    "outFile": "../../build/SmartMelee.js"
+    "outFile": "../build/ZapKite.js"
   },
   "files": ["index.ts"]
 }

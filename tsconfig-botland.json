@@ -7,7 +7,7 @@
     "module": "none",
     // "noLib": true,
     "target": "es3",
-    "typeRoots": ["../types"],
+    "typeRoots": ["types/"],
     "types": ["bot-land"],
     // "strict": false,
     // "alwaysStrict": true,

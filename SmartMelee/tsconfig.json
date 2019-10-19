@@ -1,7 +1,7 @@
 {
   "extends": "../tsconfig-botland",
   "compilerOptions": {
-    "outFile": "../../build/Sneaktillery.js"
+    "outFile": "../build/SmartMelee.js"
   },
   "files": ["index.ts"]
 }

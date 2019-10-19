@@ -1,7 +1,7 @@
 {
   "extends": "../tsconfig-botland",
   "compilerOptions": {
-    "outFile": "../../build/ZapKite.js"
+    "outFile": "../build/MissileKite.js"
   },
   "files": ["index.ts"]
 }

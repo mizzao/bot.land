@@ -1,9 +1,9 @@
 {
   "private": true,
-  "name": "ts-botland-project-starter",
+  "name": "botland-bots-typescript",
   "version": "1.0.0",
-  "description": "Sample repository for Typescript based Bot.Land projects",
-  "author": "Guillaume Contesso a.k.a. PopGoesTheWza",
+  "description": "Typescript-based Bot Land code",
+  "author": "Andrew Mao",
   "license": "MIT",
   "keywords": [
     "botland",
@@ -13,13 +13,13 @@
   "scripts": {
     "botland": "find build -name '*.js' -exec sed -i 's/var //g' {} +",
     "build-clean": "rimraf build && yarn build",
-    "build-ts": "tsc --build src",
+    "build-ts": "tsc --build",
     "build": "yarn build-ts && yarn botland",
-    "format": "prettier --write 'src/**/*.ts' 'src/**/*.json'",
-    "lint": "tslint --project src",
-    "watch": "tsc --build --watch src"
+    "format": "prettier --write '**/*.ts' '**/tsconfig*.json'",
+    "lint": "tslint --project",
+    "watch": "tsc --build --watch"
   },
-  "repository": "https://github.com/PopGoesTheWza/bot.land.git",
+  "repository": "https://github.com/mizzao/bot.land.git",
   "devDependencies": {
     "copyfiles": "^2.1.1",
     "prettier": "^1.18.2",
