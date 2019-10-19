@@ -12,6 +12,9 @@
       "path": "./ArtilleryMicro"
     },
     {
+      "path": "./LaserSquad"
+    },
+    {
       "path": "./MissileKite"
     },
     {
