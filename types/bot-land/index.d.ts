@@ -4,7 +4,7 @@ declare const ENEMY = 1;
 declare const CHIP = 1024;
 declare const CPU = 512;
 declare const BOT = 8;
-declare const ANYTHING;
+declare const ANYTHING: any;
 
 declare enum EntityMatchFlags {
     IS_OWNED_BY_ME = 256,
@@ -53,7 +53,7 @@ declare function findEntitiesInRange(
     type: EntityMatchFlags,
     allowReturningSelf: boolean,
     range: number
-);
+): Entity[];
 declare function findEntity(
     friendlyOrEnemy: EntityMatchFlags,
     type: EntityMatchFlags,
@@ -133,7 +133,11 @@ declare const arenaWidth: number;
 declare const arenaHeight: number;
 
 // Shared Variables
-declare let sharedA, sharedB, sharedC, sharedD, sharedE;
+declare let sharedA: any,
+    sharedB: any,
+    sharedC: any,
+    sharedD: any,
+    sharedE: any;
 
 // Entities
 declare interface Entity {

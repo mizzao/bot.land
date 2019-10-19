@@ -8,7 +8,7 @@
  * TODO: this will conflict with missile micro potshots, so we need to have that
  * use this system when merging.
  */
-const saveData = function(datum): void {
+const saveData = function(datum: any): void {
     const me = getEntityAt(x, y);
     if (!exists(sharedE)) {
         // We are the first person to save data, put ourselves in position 1
