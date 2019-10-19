@@ -1,12 +1,12 @@
 {
   "printWidth": 80,
-  "tabWidth": 4,
+  "tabWidth": 2,
   "trailingComma": "none",
   "overrides": [
     {
-      "files": "*.json",
+      "files": "*.ts",
       "options": {
-        "tabWidth": 2
+        "tabWidth": 4
       }
     }
   ]

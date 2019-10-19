@@ -1,19 +1,14 @@
 {
+  "include": ["lib/**/*.ts"],
   "compilerOptions": {
     "composite": true,
     "rootDir": ".",
-    "lib": [
-      "es2017"
-    ],
+    "lib": ["es2017"],
     "module": "none",
     // "noLib": true,
     "target": "es3",
-    "typeRoots": [
-      "../types"
-    ],
-    "types": [
-      "bot-land"
-    ],
+    "typeRoots": ["../types"],
+    "types": ["bot-land"],
     // "strict": false,
     // "alwaysStrict": true,
     // "noImplicitAny": true,
