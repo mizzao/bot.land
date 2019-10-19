@@ -1,5 +1,7 @@
-build/**/*.d.ts
-build/**/*.tsbuildinfo
+# Just don't include compiled files at all.
+build/
+# build/**/*.d.ts
+# build/**/*.tsbuildinfo
 
 node_modules/
 .node_modules/
