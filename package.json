@@ -11,8 +11,10 @@
     "typescript"
   ],
   "scripts": {
-    "build-clean": "rimraf build && npm run build",
-    "build": "tsc --build src",
+    "botland": "find build -name '*.js' -exec sed -i 's/var //g' {} +",
+    "build-clean": "rimraf build && yarn build",
+    "build-ts": "tsc --build src",
+    "build": "yarn build-ts && yarn botland",
     "format": "prettier --write 'src/**/*.ts' 'src/**/*.json'",
     "lint": "tslint --project src",
     "watch": "tsc --build --watch src"
