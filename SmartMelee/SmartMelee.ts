@@ -6,6 +6,10 @@
  * bot moves. So effective DPS can be twice as high (!!) as with normal zapper.
  */
 const update = function() {
+    // Hack for anti-telecloak: if we are in the area where cloakers may be
+    // running around, always try to (inferno) zap.
+    if (x >= arenaWidth - 1 - 2) tryZap();
+
     // Equip when we see someone, not blindly
     const closestEnemyBot = findEntity(
         ENEMY,
