@@ -5,7 +5,7 @@ Land](https://play.bot.land). Bot Land is an RTS game where you control your
 units programmatically instead of manually. This code, with appropriate tactical
 use, reached #1 on the Bot Land attack leaderboard in October 2019:
 
-![attack top 1](img/attack-top1.png)
+<img src="img/attack-top1.png" width="50%">
 
 These bots allow you to execute a variety of strategies. If you're familiar with
 units from Starcraft 2 / Warcraft 3, these bots are analogous to:
