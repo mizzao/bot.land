@@ -1,4 +1,5 @@
-# Just don't include compiled files at all.
+# Just don't include compiled files at all. If someone's going to copy and paste
+# this code into the game, at least they're should figure out to build it first.
 build/
 # build/**/*.d.ts
 # build/**/*.tsbuildinfo
