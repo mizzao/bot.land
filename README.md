@@ -17,6 +17,10 @@ units from Starcraft 2 / Warcraft 3, these bots are analogous to:
 - cloak rushing the enemy CPU
 - supporting other units (medic, repair, etc.)
 
+For example, check out this 5vs12 battle using missiles and landmines:
+
+[![5vs12 fight](https://img.youtube.com/vi/50vIsSPFgUs/0.jpg)](https://www.youtube.com/watch?v=50vIsSPFgUs)
+
 ## Getting Started
 
 This is a JavaScript/TypeScript project, and requires that you have [NodeJS] and
