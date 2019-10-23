@@ -14,7 +14,7 @@
  * Turn 9: cloak (zap ends)
  * Rinse and repeat.
  */
-const update = function() {
+update = function() {
     // The first thing of chaos zapping is to never disrupt the cycle. Always
     // get the counter and increment it before doing anything else.
     const CYCLEN = 9;

@@ -1,0 +1,7 @@
+{
+  "extends": "../tsconfig-botland",
+  "compilerOptions": {
+    "outFile": "../build/LaserSquad.js"
+  },
+  "files": ["LaserSquad.ts"]
+}

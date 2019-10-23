@@ -6,7 +6,7 @@
  * Loadout: regen 3, thrusters 3, mine 1
  * To be tougher, can substitute armor for thrusters or regen.
  */
-const update = function() {
+update = function() {
     // Controls EWMA limits: for mine-only we want to keep this pretty tight
     const TEAM_MIN_DIST = 2.5;
     const TEAM_MAX_DIST = 6;
