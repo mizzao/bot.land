@@ -3,7 +3,7 @@
 This repo contains TypeScript code for controlling bots on [Bot
 Land](https://play.bot.land). Bot Land is an RTS game where you control your
 units programmatically instead of manually. If you're familiar with units from
-Starcraft 2 / Warcraft 3, these bots do things like:
+Starcraft 2 / Warcraft 3, these bots are analogous to:
 
 - micro / blink Stalkers that kite enemies
 - "Siege Tanks" (artillery) that micro and lay mines
@@ -75,7 +75,7 @@ If you want to write new bots, first fork this repo. Then:
 4. Edit [`tsconfig.json`](tsconfig.json) and add a reference to `<NewBot>`.
 
 If you like your new bot and it works well, consider opening a [pull
-request][pr] to share code with the community.
+request][pr] to share your code with the community.
 
 [pr]: https://github.com/mizzao/bot.land/pulls
 
@@ -83,7 +83,7 @@ request][pr] to share code with the community.
 
 Because Bot Land uses an "eccentric" version of JavaScript, you should keep in
 mind that not everything written in standard TypeScript will transfer verbatim
-to your code. For example, all local variables will be global, `const foo = 42;`
+to your code. For example, all local variables will be global: `const foo = 42;`
 in a function may be overwriting an existing value of `foo` that you may be
 using elsewhere. Using TypeScript means we are protected against using
 undeclared variables in local function scopes; however if you want to use
@@ -95,4 +95,7 @@ documented later.
 
 ## Bugs / Questions
 
-Can't find an answer to your question here? Open an [issue].
+Can't find an answer to your question here? Open an [issue] or discuss this code
+on the [Bot Land Discord][discord].
+
+[discord]: https://discordapp.com/channels/135765168289349632/631603408771481629
