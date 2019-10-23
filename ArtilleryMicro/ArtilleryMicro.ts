@@ -4,7 +4,7 @@
  * Defense loadout: artillery 3, shield/reflect 3, thrusters 1
  * Offense loadout: artillery 2, regen 3, thrusters 1, mine 1
  */
-const update = function() {
+update = function() {
     // Controls whether artillery attack without sensors
     const AGGRESSIVE = false;
     // Controls EWMA limits: these can be a bit higher than for missiles

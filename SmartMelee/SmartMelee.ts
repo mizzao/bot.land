@@ -5,7 +5,7 @@
  * Note that when using thrusters with zapper, damage is dealt every time the
  * bot moves. So effective DPS can be twice as high (!!) as with normal zapper.
  */
-const update = function() {
+update = function() {
     // Equip when we see someone, not blindly
     const closestEnemyBot = findEntity(
         ENEMY,

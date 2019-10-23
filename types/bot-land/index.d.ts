@@ -37,7 +37,14 @@ declare type Direction =
     | "forward"
     | "backward";
 
-// Terminators
+/**
+ * Function called once each phase.
+ */
+declare let init: () => void;
+/**
+ * Function called every turn.
+ */
+declare let update: () => void;
 
 // Functions
 declare function debugLog(...stuff: any[]): void;
@@ -97,7 +104,7 @@ declare function melee(entity?: Entity): void;
 declare function willArtilleryHit(entity?: Entity): boolean;
 declare function fireArtillery(entity?: Entity): void;
 declare function willLasersHit(entity?: Entity): boolean;
-declare function fireLasers(entity?: Entity): void;
+declare function fireLasers(target?: Entity | Direction): void;
 declare function willMissilesHit(entity?: Entity): boolean;
 declare function fireMissiles(entity?: Entity): void;
 

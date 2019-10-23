@@ -10,7 +10,7 @@
  * Sneaktillery will try to get into one of the positions that is 5 spaces away
  * from the CPU and just unload until it has exploded.
  */
-const update = function() {
+update = function() {
     // Whether we should use sensors (useful to shoot chips from afar)
     const USE_SENSORS = false;
     // Whether we should run if an enemy happens upon us and we have TP, to try

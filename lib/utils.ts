@@ -110,6 +110,14 @@ const tryFireMissiles = function() {
     }
 };
 
+const tryFireLasers = function() {
+    if (willLasersHit()) {
+        const gank = findEntity(ENEMY, BOT, SORT_BY_LIFE, SORT_ASCENDING);
+        if (willLasersHit(gank)) fireLasers(gank);
+        fireLasers();
+    }
+};
+
 const tryFireArtillery = function() {
     if (willArtilleryHit()) {
         const gank = findEntity(ENEMY, BOT, SORT_BY_LIFE, SORT_ASCENDING);

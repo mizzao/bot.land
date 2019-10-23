@@ -17,7 +17,7 @@
  * Missiles 3, thrusters 2, shield 2 is possible to use against enemies with
  * high reflect and no thrusters (it saves 1 reflection).
  */
-const update = function() {
+update = function() {
     const TEAM_MIN_DIST = 2.5;
     const TEAM_MAX_DIST = 6.5;
 
