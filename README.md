@@ -1,4 +1,4 @@
-# bot.land Scripts
+# Bot Land Scripts
 
 This repo contains TypeScript code for controlling bots on [Bot
 Land](https://play.bot.land). Bot Land is an RTS game where you control your
@@ -17,7 +17,8 @@ units from Starcraft 2 / Warcraft 3, these bots are analogous to:
 - cloak rushing the enemy CPU
 - supporting other units (medic, repair, etc.)
 
-For example, check out this 5vs12 battle using missiles and landmines:
+Except, now you can micro your units perfectly via code instead of with your
+fingers. For example, check out this 5vs12 battle using missiles and landmines:
 
 [![5vs12 fight](https://img.youtube.com/vi/50vIsSPFgUs/0.jpg)](https://www.youtube.com/watch?v=50vIsSPFgUs)
 
