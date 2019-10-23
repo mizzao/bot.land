@@ -1,153 +1,21 @@
 {
-    // TODO: convert these to grunt tasks or something, and less repetitive
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "MissileKite compile",
-            "type": "typescript",
-            "tsconfig": "MissileKite/tsconfig.json",
-            "problemMatcher": [
-                "$tsc"
-            ],
-            "group": "build"
-        },
-        {
-            "label": "MissileKite output",
-            "type": "shell",
-            "command": "sed",
-            "args": [
-                "-i",
-                "s/var //g",
-                "build/MissileKite.js"
-            ],
-            "group": "build",
-            "dependsOn": [
-                "MissileKite compile"
-            ],
-            "problemMatcher": []
-        },
-        {
-            "label": "ZapKite compile",
-            "type": "typescript",
-            "tsconfig": "ZapKite/tsconfig.json",
-            "problemMatcher": [
-                "$tsc"
-            ],
-            "group": "build"
-        },
-        {
-            "label": "ZapKite output",
-            "type": "shell",
-            "command": "sed",
-            "args": [
-                "-i",
-                "s/var //g",
-                "build/ZapKite.js"
-            ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "dependsOn": [
-                "ZapKite compile"
-            ],
-            "problemMatcher": []
-        },
-        {
-            "label": "SmartMelee compile",
-            "type": "typescript",
-            "tsconfig": "SmartMelee/tsconfig.json",
-            "problemMatcher": [
-                "$tsc"
-            ],
-            "group": "build"
-        },
-        {
-            "label": "SmartMelee output",
-            "type": "shell",
-            "command": "sed",
-            "args": [
-                "-i",
-                "s/var //g",
-                "build/SmartMelee.js"
-            ],
-            "group": "build",
-            "dependsOn": [
-                "SmartMelee compile"
-            ],
-            "problemMatcher": []
-        },
-        {
-            "label": "ArtilleryMicro compile",
-            "type": "typescript",
-            "tsconfig": "ArtilleryMicro/tsconfig.json",
-            "problemMatcher": [
-                "$tsc"
-            ],
-            "group": "build"
-        },
-        {
-            "label": "ArtilleryMicro output",
-            "type": "shell",
-            "command": "sed",
-            "args": [
-                "-i",
-                "s/var //g",
-                "build/ArtilleryMicro.js"
-            ],
-            "group": "build",
-            "dependsOn": [
-                "ArtilleryMicro compile"
-            ],
-            "problemMatcher": []
-        },
-        {
-            "label": "AggroMiner compile",
-            "type": "typescript",
-            "tsconfig": "AggroMiner/tsconfig.json",
-            "problemMatcher": [
-                "$tsc"
-            ],
-            "group": "build"
-        },
-        {
-            "label": "AggroMiner output",
-            "type": "shell",
-            "command": "sed",
-            "args": [
-                "-i",
-                "s/var //g",
-                "build/AggroMiner.js"
-            ],
-            "group": "build",
-            "dependsOn": [
-                "AggroMiner compile"
-            ],
-            "problemMatcher": []
-        },
-        {
-            "label": "Sneaktillery compile",
-            "type": "typescript",
-            "tsconfig": "Sneaktillery/tsconfig.json",
-            "problemMatcher": [
-                "$tsc"
-            ],
-            "group": "build"
-        },
-        {
-            "label": "Sneaktillery output",
-            "type": "shell",
-            "command": "sed",
-            "args": [
-                "-i",
-                "s/var //g",
-                "build/Sneaktillery.js"
-            ],
-            "group": "build",
-            "dependsOn": [
-                "Sneaktillery compile"
-            ],
-            "problemMatcher": []
-        }
-    ]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "yarn",
+      "task": "watch",
+      "problemMatcher": [
+        "$tsc-watch"
+      ],
+      "group": "build"
+    },
+    {
+      "type": "yarn",
+      "task": "build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
 }

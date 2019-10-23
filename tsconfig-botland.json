@@ -1,0 +1,33 @@
+{
+  "include": ["lib/**/*.ts"],
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": ".",
+    "lib": ["es2017"],
+    "module": "none",
+    // "noLib": true,
+    "target": "es3",
+    "typeRoots": ["types/"],
+    "types": ["bot-land"],
+    // Avoid the "use strict" emitted at the top of output scripts.
+    "noImplicitUseStrict": true,
+    // We need this to help stay under Bot Land's 16,500 character limit.
+    "removeComments": true,
+    // Don't source maps for bots.
+    "sourceMap": false,
+    // Other assorted stuff...
+    "noEmitOnError": true,
+    "noErrorTruncation": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    // "preserveConstEnums": true,
+    // "skipLibCheck": true,
+    "strictNullChecks": true,
+    "newLine": "lf",
+    "pretty": true
+    // Can't disable declaration files for bots, but they are ignored anyway.
+    // "declaration": false,
+    // "declarationMap": false,
+  }
+}

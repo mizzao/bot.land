@@ -1,5 +1,31 @@
 {
+  "private": true,
+  "name": "botland-bots-typescript",
+  "version": "1.0.0",
+  "description": "Typescript-based Bot Land code",
+  "author": "Andrew Mao",
+  "license": "MIT",
+  "keywords": [
+    "botland",
+    "ts",
+    "typescript"
+  ],
+  "scripts": {
+    "botland": "find build -name '*.js' -exec sed -i 's/var //g' {} +",
+    "build-clean": "rimraf build && yarn build",
+    "build-ts": "tsc --build",
+    "build": "yarn build-ts && yarn botland",
+    "format": "prettier --write '**/*.ts' '**/tsconfig*.json'",
+    "lint": "tslint --project .",
+    "watch": "tsc --build --watch"
+  },
+  "repository": "https://github.com/mizzao/bot.land.git",
   "devDependencies": {
-    "typescript": "^3.6.3"
+    "prettier": "^1.18.2",
+    "rimraf": "^3.0.0",
+    "tslint": "^5.20.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-plugin-prettier": "^2.0.1",
+    "typescript": "^3.6.4"
   }
 }

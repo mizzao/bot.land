@@ -1,10 +1,14 @@
 {
-    "editor.formatOnSave": true,
-    "[typescript]": {
-        // The bot.land editor uses 4 spaces.
-        "editor.tabSize": 4
-    },
-    "files.exclude": {
-        "node_modules/": true
-    }
+  "editor.formatOnSave": true,
+  "[typescript]": {
+    // The bot.land editor uses 4 spaces.
+    "editor.tabSize": 4
+  },
+  "files.exclude": {
+    "build/**/*.d.ts": true,
+    "build/**/*.tsbuildinfo": true,
+    "node_modules/": true
+  },
+  // This gets VSCode to use the yarn tasks instead of suggesting its own.
+  "typescript.tsc.autoDetect": "off"
 }

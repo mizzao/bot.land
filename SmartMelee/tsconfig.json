@@ -1,15 +1,9 @@
 {
+  "extends": "../tsconfig-botland",
   "compilerOptions": {
-    "target": "es3",
-    "module": "none",
-    "removeComments": true,
-    "sourceMap": false,
     "outFile": "../build/SmartMelee.js"
   },
   "files": [
     "SmartMelee.ts"
-  ],
-  "include": [
-    "../lib/**/*"
   ]
 }
